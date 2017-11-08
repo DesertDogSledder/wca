@@ -1,0 +1,3 @@
+*.wca
+.idea/**
+**/__pycache__
