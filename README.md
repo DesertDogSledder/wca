@@ -25,7 +25,7 @@ Run `wca.py` to launch the application.
 
 * **DesertDogSledder** - *Initial work* - [DesertDogSledder](https://github.com/DesertDogSledder)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/DesertDogSledder/wca/contributors) who participated in this project.
 
 ## Acknowledgments
 
