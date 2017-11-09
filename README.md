@@ -8,13 +8,14 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-Python 3 is required to run the application.  You can download it at https://www.python.org/ .
+* [Python 3](https://www.python.org/)
+* [git](https://git-scm.com/downloads) (for update functionality)
 
 
 ### Installing
 
 Extract wherever you'd like!
-Run `wca.py` to launch the application.
+Run `launcher.py` to launch, update, or repair the application.
 
 
 ## Built With
