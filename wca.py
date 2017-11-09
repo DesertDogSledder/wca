@@ -7,9 +7,7 @@
 
 import copy
 import pickle
-import platform
 import shutil
-import subprocess
 import textwrap
 from os import listdir
 from os.path import isfile, join
@@ -19,45 +17,13 @@ from data.custom import *
 from data.exploits import *
 from data.homeworlds import *
 from data.races import *
-from lib import dice, character
+from lib import dice, character, tui
 
 user_character = None
 
 banner = ('========================\n'
           'WOIN Character Assistant\n'
           '========================\n')
-
-
-#####################
-# Support functions #
-#####################
-def clear_screen():
-    if platform.system() == 'Windows':
-        command = 'cls'
-    else:
-        command = 'clear'
-    subprocess.call(command, shell=True)
-
-
-def select_yes_no():
-    selection = None
-    while selection != 'y' and selection != 'n':
-        selection = input('(Y/N)> ').lower().strip()
-    return selection == 'y'
-
-
-def user_selection():
-    return input('> ').strip()
-
-
-def tidy_line(count):
-    # This little bit ensures that we get a line break no matter what count ends on
-    if not (count - 1) % 3 == 0:
-        print()
-
-
-def wait():
-    input('Press enter to continue.')
 
 
 #################
@@ -67,7 +33,7 @@ def new_character():
     global user_character
     if user_character is not None:
         print('Character exists.  Overwrite?')
-        if not select_yes_no():
+        if not tui.select_yes_no():
             return
 
     user_character = character.Character(race=copy.deepcopy(races_new.race_new_human),
@@ -78,7 +44,7 @@ def edit_character():
     global user_character
     menu_name = 'Edit Character'
     while True:
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
         print('1. Name ({})'.format(user_character.name))
@@ -90,7 +56,7 @@ def edit_character():
         print('7. Misc exploits')
         print('\n0. Back')
 
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '1':
             edit_name(menu_name)
@@ -114,14 +80,14 @@ def edit_name(parent_menu):
     global user_character
     menu_name = '{} >> Name'.format(parent_menu)
     while True:
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
         print('Current Name: {}\n'.format(user_character.name))
 
         print('Enter new name')
         print('Leave blank to abort and return to previous menu')
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection != '':
             user_character.name = selection
@@ -134,7 +100,7 @@ def edit_race(parent_menu):
     global user_character
     menu_name = '{} >> Race'.format(parent_menu)
     while True:
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
         print('Current Race: {}\n'.format(user_character.race.name))
@@ -143,7 +109,7 @@ def edit_race(parent_menu):
         print('2. Select racial skills')
         print('\n0. Back\n')
 
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '1':
             set_race_main(menu_name)
@@ -157,7 +123,7 @@ def set_race_main(parent_menu):
     global user_character
     menu_name = '{} >> Select Race'.format(parent_menu)
     while True:
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
         print('Current Race: {}\n'.format(user_character.race.name))
@@ -168,7 +134,7 @@ def set_race_main(parent_menu):
         print('4. Custom races')
         print('\n0. Back\n')
 
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '1':
             set_race_sub(menu_name, 'OLD Races', races_old.race_old_list)
@@ -187,7 +153,7 @@ def set_race_sub(parent_menu, sub_menu_name, race_list):
     menu_name = '{} >> {}'.format(parent_menu, sub_menu_name)
     while True:
         terminal_size = shutil.get_terminal_size()
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
         print('Current Race: {}\n'.format(user_character.race.name))
@@ -200,19 +166,19 @@ def set_race_sub(parent_menu, sub_menu_name, race_list):
             else:
                 print('{:2}. {}'.format(count, race.name))
             count += 1
-        tidy_line(count)
+        tui.tidy_line(count)
 
         print('\n0. Back\n')
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '0':
             break
         try:
             num_selection = int(selection)
-            clear_screen()
+            tui.clear_screen()
             print(race_list[num_selection-1])
             print('\nSelect this race?')
-            if select_yes_no():
+            if tui.select_yes_no():
                 user_character.race = copy.deepcopy(race_list[num_selection-1])
                 break
             else:
@@ -228,7 +194,7 @@ def edit_race_skills(parent_menu):
     while True:
         terminal_size = shutil.get_terminal_size()
         width = terminal_size[0]
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
         for line in textwrap.wrap(info, width):
@@ -242,7 +208,7 @@ def edit_race_skills(parent_menu):
             else:
                 print('{}'.format(skill))
             count += 1
-        tidy_line(count)
+        tui.tidy_line(count)
 
         selected_skills = ''
         for skill_pick in user_character.race_skill_choices:
@@ -257,7 +223,7 @@ def edit_race_skills(parent_menu):
         print('Enter a skill name to add')
         print('Enter existing skill name to remove')
         print('Leave blank to abort and return to previous menu')
-        selection = user_selection().lower()
+        selection = tui.user_selection().lower()
 
         if selection == '':
             break
@@ -273,7 +239,7 @@ def edit_homeworld(parent_menu):
     global user_character
     menu_name = '{} >> Homeworld'.format(parent_menu)
     while True:
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
         print('Current Homeworld: {}\n'.format(user_character.homeworld.name))
@@ -282,7 +248,7 @@ def edit_homeworld(parent_menu):
         print('2. Select homeworld skills')
         print('\n0. Back\n')
 
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '1':
             set_homeworld_main(menu_name)
@@ -296,7 +262,7 @@ def set_homeworld_main(parent_menu):
     global user_character
     menu_name = '{} >> Set Homeworld'.format(parent_menu)
     while True:
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
         print('Current Homeworld: {}\n'.format(user_character.homeworld.name))
@@ -305,7 +271,7 @@ def set_homeworld_main(parent_menu):
         print('2. Custom homeworlds')
         print('\n0. Back\n')
 
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '1':
             set_homeworld_sub(menu_name, 'NEW homeworlds', homeworlds_new.homeworld_new_list)
@@ -320,7 +286,7 @@ def set_homeworld_sub(parent_menu, sub_menu_name, homeworld_list):
     menu_name = '{} >> {}'.format(parent_menu, sub_menu_name)
     while True:
         terminal_size = shutil.get_terminal_size()
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
         print('Current Homeworld: {}\n'.format(user_character.homeworld.name))
@@ -333,18 +299,18 @@ def set_homeworld_sub(parent_menu, sub_menu_name, homeworld_list):
             else:
                 print('{:2}. {}'.format(count, homeworld.name))
             count += 1
-        tidy_line(count)
+        tui.tidy_line(count)
         print('\n0. Back\n')
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '0':
             break
         try:
             num_selection = int(selection)
-            clear_screen()
+            tui.clear_screen()
             print(homeworld_list[num_selection-1])
             print('\nSelect this homeworld?')
-            if select_yes_no():
+            if tui.select_yes_no():
                 user_character.homeworld = copy.deepcopy(homeworld_list[num_selection-1])
                 break
             else:
@@ -360,7 +326,7 @@ def edit_homeworld_skills(parent_menu):
     while True:
         terminal_size = shutil.get_terminal_size()
         width = terminal_size[0]
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
 
@@ -375,7 +341,7 @@ def edit_homeworld_skills(parent_menu):
             else:
                 print('{}'.format(skill))
             count += 1
-        tidy_line(count)
+        tui.tidy_line(count)
 
         selected_skills = ''
         for skill_pick in user_character.homeworld_skill_choices:
@@ -390,7 +356,7 @@ def edit_homeworld_skills(parent_menu):
         print('Enter a skill name to add')
         print('Enter existing skill name to remove')
         print('Leave blank to abort and return to previous menu')
-        selection = user_selection().lower()
+        selection = tui.user_selection().lower()
 
         if selection == '':
             break
@@ -406,7 +372,7 @@ def edit_hook_main(parent_menu):
     global user_character
     menu_name = '{} >> Hook'.format(parent_menu)
     while True:
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
         print('Hook: {}'.format(user_character.hook['Hook']))
@@ -416,7 +382,7 @@ def edit_hook_main(parent_menu):
         print('2. Set hook attribute')
         print('\n0. Back\n')
 
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '1':
             edit_hook_sub(menu_name)
@@ -428,7 +394,7 @@ def edit_hook_main(parent_menu):
 
 def edit_hook_sub(parent_menu):
     menu_name = '{} >> Edit Hook'.format(parent_menu)
-    clear_screen()
+    tui.clear_screen()
     print(banner)
     print('{}\n'.format(menu_name))
     print('Hook: {}\n'.format(user_character.hook['Hook']))
@@ -436,7 +402,7 @@ def edit_hook_sub(parent_menu):
     print('Enter new hook')
     print('Leave blank to abort and return to previous menu')
 
-    selection = user_selection()
+    selection = tui.user_selection()
 
     if selection != '':
         user_character.hook['Hook'] = selection
@@ -444,7 +410,7 @@ def edit_hook_sub(parent_menu):
 
 def edit_hook_attribute(parent_menu):
     menu_name = '{} >> Edit Hook Attribute'.format(parent_menu)
-    clear_screen()
+    tui.clear_screen()
     print(banner)
     print('{}\n'.format(menu_name))
     print('Hook Attribute: {}\n'.format(user_character.hook['Attribute']))
@@ -452,7 +418,7 @@ def edit_hook_attribute(parent_menu):
     print('Enter new hook attribute')
     print('Leave blank to abort and return to previous menu')
 
-    selection = user_selection()
+    selection = tui.user_selection()
 
     if selection != '':
         user_character.hook['Attribute'] = selection
@@ -462,7 +428,7 @@ def edit_careers(parent_menu):
     global user_character
     menu_name = '{} >> Careers'.format(parent_menu)
     while True:
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
         career_track = ''
@@ -483,7 +449,7 @@ def edit_careers(parent_menu):
         print('4. Remove career')
         print('\n0. Back\n')
 
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '1':
             add_career_main(menu_name)
@@ -501,7 +467,7 @@ def add_career_main(parent_menu):
     global user_character
     menu_name = '{} >> Add Careers'.format(parent_menu)
     while True:
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
         print('1. Origins')
@@ -512,7 +478,7 @@ def add_career_main(parent_menu):
         print('6. Custom careers')
         print('\n0. Back\n')
 
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '1':
             add_career_sub(menu_name, 'Origins', origins.career_woin_origin_list)
@@ -541,7 +507,7 @@ def add_career_sub(parent_menu, sub_menu_name, career_list):
     menu_name = '{} >> {}'.format(parent_menu, sub_menu_name)
     while True:
         terminal_size = shutil.get_terminal_size()
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
 
@@ -553,10 +519,10 @@ def add_career_sub(parent_menu, sub_menu_name, career_list):
             else:
                 print('{:2}. {}'.format(count, career.name))
             count += 1
-        tidy_line(count)
+        tui.tidy_line(count)
 
         print('\n0. Back\n')
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '0':
             break
@@ -564,10 +530,10 @@ def add_career_sub(parent_menu, sub_menu_name, career_list):
             break
         try:
             num_selection = int(selection)
-            clear_screen()
+            tui.clear_screen()
             print(career_list[num_selection-1])
             print('\nSelect this career?')
-            if select_yes_no():
+            if tui.select_yes_no():
                 user_character.career_track.append({'Career': copy.deepcopy(career_list[num_selection-1]),
                                                     'Length': '{} {}'.format(
                                                         dice.roll(career_list[num_selection - 1].career_time)['total'],
@@ -587,7 +553,7 @@ def change_career_order(parent_menu):
     global user_character
     menu_name = '{} >> Change Career Order'.format(parent_menu)
     while True:
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
 
@@ -599,13 +565,13 @@ def change_career_order(parent_menu):
         print('\n0. Back\n')
 
         print('Select first career number to swap (0 to abort):')
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '0':
             break
 
         print('Select second career number to swap (0 to abort):')
-        selection_2 = user_selection()
+        selection_2 = tui.user_selection()
 
         if selection_2 == '0':
             break
@@ -615,17 +581,17 @@ def change_career_order(parent_menu):
                 user_character.career_track[int(selection_2)-1], user_character.career_track[int(selection)-1]
         except IndexError:
             print('\nInvalid selections.\n')
-            wait()
+            tui.wait()
         except ValueError:
             print('\nInvalid selections.\n')
-            wait()
+            tui.wait()
 
 
 def edit_career_details_main(parent_menu):
     global user_character
     menu_name = '{} >> Edit Career Details'.format(parent_menu)
     while True:
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
 
@@ -636,7 +602,7 @@ def edit_career_details_main(parent_menu):
             count += 1
         print('\n0. Back\n')
 
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '0':
             break
@@ -654,7 +620,7 @@ def edit_career_details_sub(parent_menu, index):
     global user_character
     menu_name = '{} >> [{}] {}'.format(parent_menu, index+1, user_character.career_track[index]['Career'].name)
     while True:
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
 
@@ -665,7 +631,7 @@ def edit_career_details_sub(parent_menu, index):
 
         print('\n0. Back\n')
 
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '1':
             edit_career_details_skills(menu_name, index)
@@ -687,7 +653,7 @@ def edit_career_details_skills(parent_menu, index):
     while True:
         terminal_size = shutil.get_terminal_size()
         width = terminal_size[0]
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
         
@@ -702,7 +668,7 @@ def edit_career_details_skills(parent_menu, index):
             else:
                 print('{}'.format(skill))
             count += 1
-        tidy_line(count)
+        tui.tidy_line(count)
 
         selected_skills = ''
         for skill_pick in user_character.career_track[index]['Skills']:
@@ -717,7 +683,7 @@ def edit_career_details_skills(parent_menu, index):
         print('Enter a skill name to add')
         print('Enter existing skill name to remove')
         print('Leave blank to abort and return to previous menu')
-        selection = user_selection().lower()
+        selection = tui.user_selection().lower()
 
         if selection == '':
             break
@@ -733,7 +699,7 @@ def edit_career_details_exploits_main(parent_menu, index):
     global user_character
     menu_name = '{} >> Exploits'.format(parent_menu)
     while True:
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
 
@@ -748,7 +714,7 @@ def edit_career_details_exploits_main(parent_menu, index):
 
         print('\n0. Back\n')
 
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '1':
             edit_career_details_exploits_sub(menu_name, 'Career Exploits', index,
@@ -768,7 +734,7 @@ def edit_career_details_exploits_sub(parent_menu, sub_menu_name, index, exploit_
     menu_name = '{} >> {}'.format(parent_menu, sub_menu_name)
     while True:
         terminal_size = shutil.get_terminal_size()
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
 
@@ -780,19 +746,19 @@ def edit_career_details_exploits_sub(parent_menu, sub_menu_name, index, exploit_
             else:
                 print('{:2}. {}'.format(count, exploit['Name']))
             count += 1
-        tidy_line(count)
+        tui.tidy_line(count)
 
         print('\n0. Back\n')
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '0':
             break
         try:
             num_selection = int(selection)
-            clear_screen()
+            tui.clear_screen()
             print('{} - {}'.format(exploit_list[num_selection-1]['Name'], exploit_list[num_selection-1]['Desc']))
             print('\nSelect this exploit?')
-            if select_yes_no():
+            if tui.select_yes_no():
                 user_character.career_track[index]['Exploit'] = copy.deepcopy(exploit_list[num_selection-1])
                 break
             else:
@@ -807,7 +773,7 @@ def edit_career_details_stats(parent_menu, index):
     while True:
         terminal_size = shutil.get_terminal_size()
         width = terminal_size[0]
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
 
@@ -824,11 +790,11 @@ def edit_career_details_stats(parent_menu, index):
             else:
                 print('{}: {}'.format(stat, value))
             count += 1
-        tidy_line(count)
+        tui.tidy_line(count)
 
         print('\nPick stat to edit')
         print('Leave blank to abort and return to previous menu')
-        selection = user_selection().upper()[:3]
+        selection = tui.user_selection().upper()[:3]
 
         if selection == '':
             break
@@ -836,7 +802,7 @@ def edit_career_details_stats(parent_menu, index):
             try:
                 print('Enter new value')
                 print('Leave blank to abort and return to previous menu')
-                selection_2 = user_selection()
+                selection_2 = tui.user_selection()
                 if selection_2 == '':
                     break
                 user_character.career_track[index]['Stats'][selection] = int(selection_2)
@@ -849,7 +815,7 @@ def edit_career_details_notes(parent_menu, index):
     menu_name = '{} >> Edit Notes'.format(parent_menu)
     terminal_size = shutil.get_terminal_size()
     width = terminal_size[0]
-    clear_screen()
+    tui.clear_screen()
     print(banner)
     print('{}\n'.format(menu_name))
 
@@ -863,7 +829,7 @@ def edit_career_details_notes(parent_menu, index):
         print(line)
 
     print('\nEnter new note (0 to abort):')
-    selection = user_selection()
+    selection = tui.user_selection()
     if selection != '0':
         user_character.career_track[index]['Notes'] = selection
 
@@ -872,7 +838,7 @@ def remove_career(parent_menu):
     global user_character
     menu_name = '{} >> Remove Career'.format(parent_menu)
     while True:
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
 
@@ -884,7 +850,7 @@ def remove_career(parent_menu):
         print('\n0. Back\n')
 
         print('Select career to remove')
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '0':
             break
@@ -905,7 +871,7 @@ def remove_career(parent_menu):
                 print('Exploit: none selected')
 
             print('\nRemove this career from the character?')
-            if select_yes_no():
+            if tui.select_yes_no():
                 user_character.career_track.pop(num_selection-1)
             break
         except ValueError:
@@ -920,7 +886,7 @@ def edit_trait(parent_menu):
     while True:
         terminal_size = shutil.get_terminal_size()
         width = terminal_size[0]
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
         print('Current trait: {}'.format(user_character.trait['Name']))
@@ -932,7 +898,7 @@ def edit_trait(parent_menu):
             else:
                 print('{}: {}'.format(stat, value))
             count += 1
-        tidy_line(count)
+        tui.tidy_line(count)
 
         print()
         count = 1
@@ -943,11 +909,11 @@ def edit_trait(parent_menu):
                 print('{:2}. {}'.format(count, exploit['Name']))
             count += 1
 
-        tidy_line(count)
+        tui.tidy_line(count)
 
         print('\n0. Back')
 
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '0':
             break
@@ -959,7 +925,7 @@ def edit_trait(parent_menu):
                                    exploits_traits.exploit_traits_list[num_selection-1]['Desc']))
 
             print('Select this trait?')
-            if select_yes_no():
+            if tui.select_yes_no():
                 user_character.trait = copy.deepcopy(exploits_traits.exploit_traits_list[num_selection-1])
                 break
         except IndexError:
@@ -974,7 +940,7 @@ def edit_misc_exploits(parent_menu):
     while True:
         terminal_size = shutil.get_terminal_size()
         width = terminal_size[0]
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
 
@@ -987,7 +953,7 @@ def edit_misc_exploits(parent_menu):
                 else:
                     print('{}'.format(exploit['Name']))
                 count += 1
-            tidy_line(count)
+            tui.tidy_line(count)
         else:
             print('Current misc exploits: (None)')
 
@@ -996,7 +962,7 @@ def edit_misc_exploits(parent_menu):
 
         print('\n0. Back\n')
 
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '1':
             add_misc_exploits_main(menu_name)
@@ -1019,7 +985,7 @@ def add_misc_exploits_main(parent_menu):
 
         print('\n0. Back\n')
 
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '1':
             add_misc_exploits_sub(menu_name, 'Universal Exploits', exploits_universal.exploit_universal_list)
@@ -1039,7 +1005,7 @@ def add_misc_exploits_sub(parent_menu, sub_menu_name, exploit_list):
     menu_name = '{} >> {}'.format(parent_menu, sub_menu_name)
     while True:
         terminal_size = shutil.get_terminal_size()
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
 
@@ -1051,19 +1017,19 @@ def add_misc_exploits_sub(parent_menu, sub_menu_name, exploit_list):
             else:
                 print('{:2}. {}'.format(count, exploit['Name']))
             count += 1
-        tidy_line(count)
+        tui.tidy_line(count)
 
         print('\n0. Back\n')
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '0':
             break
         try:
             num_selection = int(selection)
-            clear_screen()
+            tui.clear_screen()
             print('{} - {}'.format(exploit_list[num_selection-1]['Name'], exploit_list[num_selection-1]['Desc']))
             print('\nSelect this exploit?')
-            if select_yes_no() and exploit_list[num_selection-1] not in user_character.misc_exploits:
+            if tui.select_yes_no() and exploit_list[num_selection-1] not in user_character.misc_exploits:
                 user_character.misc_exploits.append(copy.deepcopy(exploit_list[num_selection-1]))
                 user_character.misc_exploits.sort(key=lambda x: x['Name'])
                 break
@@ -1078,7 +1044,7 @@ def remove_misc_exploits(parent_menu):
     menu_name = '{} >> Remove'.format(parent_menu)
     while True:
         terminal_size = shutil.get_terminal_size()
-        clear_screen()
+        tui.clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
 
@@ -1090,12 +1056,12 @@ def remove_misc_exploits(parent_menu):
             else:
                 print('{:2}. {}'.format(count, exploit['Name']))
             count += 1
-        tidy_line(count)
+        tui.tidy_line(count)
 
         print('\n0. Back')
 
         print('Select exploit to remove')
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '0':
             break
@@ -1105,7 +1071,7 @@ def remove_misc_exploits(parent_menu):
             print('{} - {}'.format(user_character.misc_exploits[num_selection-1]['Name'],
                                    user_character.misc_exploits[num_selection-1]['Desc']))
             print('Remove this exploit?')
-            if select_yes_no():
+            if tui.select_yes_no():
                 user_character.misc_exploits.pop(num_selection-1)
         except ValueError:
             pass
@@ -1116,12 +1082,12 @@ def remove_misc_exploits(parent_menu):
 def load_character():
     global user_character
     menu_name = 'Load Character'
-    clear_screen()
+    tui.clear_screen()
     print(banner)
     print('{}\n'.format(menu_name))
     if user_character is not None:
         print('Character exists.  Overwrite?')
-        if not select_yes_no():
+        if not tui.select_yes_no():
             return
 
     character_files = [f for f in listdir('./characters') if isfile(join('./characters', f)) and '.wca' in f]
@@ -1131,7 +1097,7 @@ def load_character():
 
     print('\nEnter character file name to load')
     print('Leave blank to abort and return to previous menu')
-    selection = user_selection()
+    selection = tui.user_selection()
 
     if selection == '':
         return
@@ -1140,28 +1106,28 @@ def load_character():
         with open('characters/{}.wca'.format(selection), 'rb') as f:
             user_character = pickle.load(f)
             print('Successfully loaded \"{}\".'.format(selection))
-            wait()
+            tui.wait()
     except FileNotFoundError:
         print('File not found.')
-        wait()
+        tui.wait()
     except pickle.UnpicklingError:
         print('Malformed file.')
-        wait()
+        tui.wait()
     except EOFError:
         print('Malformed file.')
-        wait()
+        tui.wait()
 
 
 def save_character():
     global user_character
     menu_name = 'Save Character'
-    clear_screen()
+    tui.clear_screen()
     print(banner)
     print('{}\n'.format(menu_name))
 
     print('Enter desired file name')
     print('Leave blank to abort and return to previous menu')
-    selection = user_selection()
+    selection = tui.user_selection()
 
     if selection == '':
         return
@@ -1169,7 +1135,7 @@ def save_character():
     character_files = [f for f in listdir('./characters') if isfile(join('./characters', f)) and '.wca' in f]
     if '{}.wca'.format(selection) in character_files:
         print('File \"{}\" exists.  Overwrite?'.format(selection))
-        if not select_yes_no():
+        if not tui.select_yes_no():
             return
     with open('characters/{}.wca'.format(selection), 'wb') as f:
         pickle.dump(user_character, f, pickle.HIGHEST_PROTOCOL)
@@ -1181,7 +1147,7 @@ def save_character():
 def main():
     global user_character
     while True:
-        clear_screen()
+        tui.clear_screen()
         print(banner)
 
         print('Main menu:\n')
@@ -1193,7 +1159,7 @@ def main():
             print('5. Save character')
         print('\n0. Exit\n')
 
-        selection = user_selection()
+        selection = tui.user_selection()
 
         if selection == '1':
             new_character()
@@ -1203,17 +1169,17 @@ def main():
             edit_character()
         elif selection == '4' and user_character is not None:
             print(user_character)
-            wait()
+            tui.wait()
         elif selection == '5' and user_character is not None:
             save_character()
         elif selection == '0':
             if user_character is not None:
                 print('Unsaved changes will be lost. Are you sure you want to exit?')
-                if select_yes_no():
+                if tui.select_yes_no():
                     break
             else:
                 break
-    clear_screen()
+    tui.clear_screen()
 
 
 if __name__ == '__main__':
