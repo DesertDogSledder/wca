@@ -117,9 +117,10 @@ def edit_name(parent_menu):
         clear_screen()
         print(banner)
         print('{}\n'.format(menu_name))
-        print('Current Name: {}'.format(user_character.name))
+        print('Current Name: {}\n'.format(user_character.name))
 
-        print('Enter new name (Leave blank to abort and return to previous menu')
+        print('Enter new name')
+        print('Leave blank to abort and return to previous menu')
         selection = user_selection()
 
         if selection != '':
@@ -133,6 +134,8 @@ def edit_race(parent_menu):
     global user_character
     menu_name = '{} >> Race'.format(parent_menu)
     while True:
+        clear_screen()
+        print(banner)
         print('{}\n'.format(menu_name))
         print('Current Race: {}\n'.format(user_character.race.name))
 
@@ -232,7 +235,7 @@ def edit_race_skills(parent_menu):
             print(line)
 
         count = 1
-        print('\nAvailable racial skills:')
+        print('\nAvailable racial skills ({}):'.format(user_character.race.name))
         for skill in user_character.race.available_skills:
             if not count % 3 == 0:
                 print('{:{width}}'.format(skill, width=width//4), end='')
