@@ -26,6 +26,6 @@ def update_wca():
 def repair_wca():
     code = subprocess.call(("git", "reset", "--hard"))
     if code == 0:
-        print("Red has been restored to the last local commit.")
+        print("WCA has been restored to the last local commit.")
     else:
         print("The repair has failed.")
