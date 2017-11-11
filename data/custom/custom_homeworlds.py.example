@@ -1,9 +1,6 @@
-from data.homeworlds import *
+from lib.character import Homeworld
 
 custom_homeworld_list = []
-########################################
-# DO NOT EDIT ANYTHING ABOVE THIS LINE #
-########################################
 
 #
 # TEMPLATE
@@ -23,6 +20,9 @@ custom_homeworld_list = []
 #     available_skills=['farming', 'plowing'])
 # custom_homeworld_list.append(farmworld)
 #
+########################################
+# DO NOT EDIT ANYTHING ABOVE THIS LINE #
+########################################
 
 ########################################
 # DO NOT EDIT ANYTHING BELOW THIS LINE #

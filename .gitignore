@@ -1,3 +1,4 @@
 *.wca
 .idea/**
 **/__pycache__
+data/custom/custom_*.py
