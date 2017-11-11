@@ -13,11 +13,31 @@ from os import listdir
 from os.path import isfile, join
 
 from data.careers import *
-from data.custom import *
 from data.exploits import *
 from data.homeworlds import *
 from data.races import *
 from lib import dice, character, tui
+
+try:
+    from data.custom import custom_careers
+    custom_careers_loaded = True
+except ImportError:
+    custom_careers_loaded = False
+try:
+    from data.custom import custom_exploits
+    custom_exploits_loaded = True
+except ImportError:
+    custom_exploits_loaded = False
+try:
+    from data.custom import custom_homeworlds
+    custom_homeworlds_loaded = True
+except ImportError:
+    custom_homeworlds_loaded = False
+try:
+    from data.custom import custom_races
+    custom_races_loaded = True
+except ImportError:
+    custom_races_loaded = False
 
 user_character = None
 
@@ -131,7 +151,8 @@ def set_race_main(parent_menu):
         print('1. OLD races')
         print('2. NOW races')
         print('3. NEW races')
-        print('4. Custom races')
+        if custom_races_loaded:
+            print('4. Custom races')
         print('\n0. Back\n')
 
         selection = tui.user_selection()
@@ -142,7 +163,7 @@ def set_race_main(parent_menu):
             set_race_sub(menu_name, 'NOW Races', races_now.race_now_list)
         elif selection == '3':
             set_race_sub(menu_name, 'NEW Races', races_new.race_new_list)
-        elif selection == '4':
+        elif selection == '4' and custom_races_loaded:
             set_race_sub(menu_name, 'Custom Races', custom_races.custom_race_list)
         elif selection == '0':
             break
@@ -268,14 +289,15 @@ def set_homeworld_main(parent_menu):
         print('Current Homeworld: {}\n'.format(user_character.homeworld.name))
 
         print('1. NEW homeworlds')
-        print('2. Custom homeworlds')
+        if custom_homeworlds_loaded:
+            print('2. Custom homeworlds')
         print('\n0. Back\n')
 
         selection = tui.user_selection()
 
         if selection == '1':
             set_homeworld_sub(menu_name, 'NEW homeworlds', homeworlds_new.homeworld_new_list)
-        elif selection == '2':
+        elif selection == '2' and custom_homeworlds_loaded:
             set_homeworld_sub(menu_name, 'Custom homeworlds',custom_homeworlds.custom_homeworld_list)
         elif selection == '0':
             break
@@ -475,7 +497,8 @@ def add_career_main(parent_menu):
         print('3. NOW careers')
         print('4. NEW careers')
         print('5. Martial arts careers')
-        print('6. Custom careers')
+        if custom_careers_loaded:
+            print('6. Custom careers')
         print('\n0. Back\n')
 
         selection = tui.user_selection()
@@ -495,7 +518,7 @@ def add_career_main(parent_menu):
         elif selection == '5':
             add_career_sub(menu_name, 'Martial Arts Careers', careers_martial_arts.career_ma_list)
             break
-        elif selection == '6':
+        elif selection == '6' and custom_careers_loaded:
             add_career_sub(menu_name, 'Custom Careers', custom_careers.custom_career_list)
             break
         elif selection == '0':
@@ -710,7 +733,8 @@ def edit_career_details_exploits_main(parent_menu, index):
 
         print('1. Career exploits')
         print('2. Universal exploits')
-        print('3. Custom exploits')
+        if custom_exploits_loaded:
+            print('3. Custom exploits')
 
         print('\n0. Back\n')
 
@@ -722,7 +746,7 @@ def edit_career_details_exploits_main(parent_menu, index):
         elif selection == '2':
             edit_career_details_exploits_sub(menu_name, 'Universal Exploits', index,
                                              exploits_universal.exploit_universal_list)
-        elif selection == '3':
+        elif selection == '3' and custom_exploits_loaded:
             edit_career_details_exploits_sub(menu_name, 'Custom Exploits', index,
                                              custom_exploits.custom_exploit_list)
         elif selection == '0':
@@ -981,7 +1005,8 @@ def add_misc_exploits_main(parent_menu):
 
         print('1. Universal exploits')
         print('2. Android exploits')
-        print('3. Custom exploits')
+        if custom_exploits_loaded:
+            print('3. Custom exploits')
 
         print('\n0. Back\n')
 
@@ -993,7 +1018,7 @@ def add_misc_exploits_main(parent_menu):
         elif selection == '2':
             add_misc_exploits_sub(menu_name, 'Android Exploits', exploits_android.exploit_android_list)
             break
-        elif selection == '3':
+        elif selection == '3' and custom_exploits_loaded:
             add_misc_exploits_sub(menu_name, 'Custom Exploits', custom_exploits.custom_exploit_list)
             break
         elif selection == '0':
