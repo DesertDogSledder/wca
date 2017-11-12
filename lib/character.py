@@ -4,8 +4,8 @@ import copy
 
 class Character(object):
     def __init__(self, name='Devon Default', strength=3, agility=3, endurance=3, willpower=3, intuition=3, logic=3,
-                 charisma=3, luck=3, reputation=0, power=0, race=None, homeworld=None,
-                 hook=None, career_track=None, notes='', race_skill_choices=None,
+                 charisma=3, luck=3, reputation=0, magic=0, chi=0, psionics=0, race=None, race_stats=None,
+                 homeworld=None, hook=None, career_track=None, notes='', race_skill_choices=None,
                  homeworld_skill_choices=None, trait=None, misc_exploits=None):
         self.name = name
         self.stats = collections.OrderedDict(STR=strength,
@@ -17,8 +17,25 @@ class Character(object):
                                              CHA=charisma,
                                              LUC=luck,
                                              REP=reputation,
-                                             POW=power)
+                                             MAG=magic,
+                                             CHI=chi,
+                                             PSI=psionics)
         self.race = copy.deepcopy(race)
+        if self.race is not None:
+            self.race_stats = copy.deepcopy(self.race.stats)
+        else:
+            self.race_stats = collections.OrderedDict(STR=0,
+                                                      AGI=0,
+                                                      END=0,
+                                                      WIL=0,
+                                                      INT=0,
+                                                      LOG=0,
+                                                      CHA=0,
+                                                      LUC=0,
+                                                      REP=0,
+                                                      MAG=0,
+                                                      CHI=0,
+                                                      PSI=0)
         if race_skill_choices is not None:
             self.race_skill_choices = copy.deepcopy(race_skill_choices)
             self.race_skill_choices.sort()
@@ -59,7 +76,7 @@ class Character(object):
     def calc_stat_total(self):
         stat_total = copy.deepcopy(self.stats)
 
-        for stat, value in self.race.stats.items():
+        for stat, value in self.race_stats.items():
             stat_total[stat] += value
 
         for stat, value in self.homeworld.stats.items():

@@ -130,6 +130,7 @@ def edit_race(parent_menu):
 
         print('1. Select race')
         print('2. Select racial skills')
+        print('3. Edit racial stats')
         print('\n0. Back\n')
 
         selection = tui.user_selection()
@@ -138,6 +139,8 @@ def edit_race(parent_menu):
             set_race_main(menu_name)
         elif selection == '2':
             edit_race_skills(menu_name)
+        elif selection == '3':
+            edit_race_stats(menu_name)
         elif selection == '0':
             break
 
@@ -204,6 +207,7 @@ def set_race_sub(parent_menu, sub_menu_name, race_list):
             print('\nSelect this race?')
             if tui.select_yes_no():
                 user_character.race = copy.deepcopy(race_list[num_selection-1])
+                user_character.race_stats = copy.deepcopy(user_character.race.stats)
                 break
             else:
                 break
@@ -257,6 +261,49 @@ def edit_race_skills(parent_menu):
             user_character.race_skill_choices.sort()
         else:
             user_character.race_skill_choices.remove(selection)
+
+
+def edit_race_stats(parent_menu):
+    global user_character
+    menu_name = '{} >> Stats'.format(parent_menu)
+    info = 'This menu is useful for changing the stat bonuses granted by a race (for example, the Human \'Varied\' ' \
+           'exploit).'
+    while True:
+        terminal_size = shutil.get_terminal_size()
+        width = terminal_size[0]
+        tui.clear_screen()
+        print(banner)
+        print('{}\n'.format(menu_name))
+
+        for line in textwrap.wrap(info, width):
+            print(line)
+
+        print('\nCurrent stats:')
+        count = 1
+        for stat, value in user_character.race_stats.items():
+            if not count % 3 == 0:
+                print('{}: {:<{width}}'.format(stat, value, width=width//4), end='')
+            else:
+                print('{}: {}'.format(stat, value))
+            count += 1
+        tui.tidy_line(count)
+
+        print('\nPick stat to edit')
+        print('Leave blank to abort and return to previous menu')
+        selection = tui.user_selection().upper()[:3]
+
+        if selection == '':
+            break
+        elif selection in user_character.race_stats:
+            try:
+                print('Enter new value')
+                print('Leave blank to abort and return to previous menu')
+                selection_2 = tui.user_selection()
+                if selection_2 == '':
+                    break
+                user_character.race_stats[selection] = int(selection_2)
+            except ValueError:
+                print('Invalid value.')
 
 
 def edit_homeworld(parent_menu):
@@ -797,6 +844,9 @@ def edit_career_details_exploits_sub(parent_menu, sub_menu_name, index, exploit_
 def edit_career_details_stats(parent_menu, index):
     global user_character
     menu_name = '{} >> Stats'.format(parent_menu)
+    info = 'Some races noted for a particular attribute have an ability which allows them to ' \
+           'optionally exchange one of these four attribute increases for a different one, as ' \
+           'long as it doesn\'t result in a duplicate attribute advancement.'
     while True:
         terminal_size = shutil.get_terminal_size()
         width = terminal_size[0]
@@ -804,9 +854,7 @@ def edit_career_details_stats(parent_menu, index):
         print(banner)
         print('{}\n'.format(menu_name))
 
-        for line in textwrap.wrap('Some races noted for a particular attribute have an ability which allows them to '
-                                  'optionally exchange one of these four attribute increases for a different one, as '
-                                  'long as it doesn\'t result in a duplicate attribute advancement.', width):
+        for line in textwrap.wrap(info, width):
             print(line)
 
         print('\nCurrent stats:')
