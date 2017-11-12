@@ -11,21 +11,27 @@ import subprocess
 #########################
 def update_wca():
     try:
-        code = subprocess.call(("git", "pull", "--ff-only"))
+        p = subprocess.Popen(("git", "pull", "--ff-only"), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = p.communicate()
     except FileNotFoundError:
         print("\nError: Git not found. It's either not installed or not in "
               "the PATH environment variable like requested in the guide.")
         return
-    if code == 0:
+    if p.returncode == 0:
         print("\nWCA has been updated")
     else:
         print("\nWCA could not update properly. If this is caused by edits "
               "you have made to the code you can try the repair option ")
+        print('STDOUT: {}'.format(out))
+        print('STDERR: {}'.format(err))
 
 
 def repair_wca():
-    code = subprocess.call(("git", "reset", "--hard"))
-    if code == 0:
+    p = subprocess.Popen(("git", "reset", "--hard"), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = p.communicate()
+    if p.returncode == 0:
         print("WCA has been restored to the last local commit.")
     else:
         print("The repair has failed.")
+        print('STDOUT: {}'.format(out))
+        print('STDERR: {}'.format(err))
