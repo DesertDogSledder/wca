@@ -28,6 +28,10 @@ Run `launcher.py` to launch, update, or repair the application.
 
 See also the list of [contributors](https://github.com/DesertDogSledder/wca/contributors) who participated in this project.
 
+## License
+
+This project is licensed under the GNU General Public License - see the [LICENSE.md](LICENSE.md) file for details
+
 ## Acknowledgments
 
 * [Red-DiscordBot](https://github.com/Cog-Creators/Red-DiscordBot) which gave me a jumping off point for a text-based interface
