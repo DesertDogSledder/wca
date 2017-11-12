@@ -13,7 +13,7 @@ Grand elf adventurers tend to be musketeers, alchemists, and sailors.
 
 Typical names (male and female): Nimrothor, Anduilas, Galmoth, Earros, Mabborn, Celelas, Mirairë, Glorgolfin, Lúfindel, Arwë.''',
     size='medium',
-    agility=2, logic=2, luck=-2, power=3,
+    agility=2, logic=2, luck=-2, magic=3,
     available_skills=['[musical]', 'alchemy', 'intimidate', 'law', 'leadership', 'muskets',
                       'pistols', 'sailing', 'swords'],
     exploits=[{'Name': 'Fey', 'Desc': '''Elves of all types are considered Fey.'''},
@@ -114,7 +114,7 @@ Many view the smallfolk as weak, sometimes even cowardly. While it is true that 
 
 Typical names (male and female): Dobur, Thrari, Kirin, Borin, Boli, Filin, Gimnor, Thrarin, Dwain, Dolo, Kibur.''',
     size='small',
-    agility=2, charisma=2, luck=2, power=1,
+    agility=2, charisma=2, luck=2, magic=1,
     available_skills=['[crafting]', 'farming', 'fishing', 'appraisal', 'cooking', 'brewing', 'slings', 'stealth',
                       'diplomacy', 'bluffing'],
     exploits=[{'Name': 'Stubborn', 'Desc': '''Smallfolk are difficult to enchant. They gain a +5 bonus to their MENTAL DEFENSE.'''},
@@ -132,7 +132,7 @@ Sylvan elf adventurers tend to be priests, rangers, and druids.
 
 Typical names (male and female): Ashonn, Branmer, Kozain, Kalier, Tereval, Rathell, Sinehan, Nerrat, Dukhon, Deerenn, Delon, Mayen.''',
     size='medium',
-    agility=2, endurance=2, power=3,
+    agility=2, endurance=2, magic=3,
     available_skills=['climbing', 'running', 'survival', 'tracking', 'animal handling', 'herbalism', 'bows', 'nature',
                       'stealth'],
     exploits=[{'Name': 'Fey', 'Desc': '''Elves of all types are considered Fey.'''},

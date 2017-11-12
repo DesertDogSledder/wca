@@ -59,6 +59,9 @@ def new_character():
     user_character = character.Character(race=copy.deepcopy(races_new.race_new_human),
                                          homeworld=copy.deepcopy(homeworlds_new.homeworld_none))
 
+    print('New character initialized.  Use the \'Edit Character\' menu to start making changes!')
+    tui.wait()
+
 
 def edit_character():
     global user_character
@@ -1176,8 +1179,8 @@ def main():
         print(banner)
 
         print('Main menu:\n')
-        print('1. Create new character')
-        print('2. Load existing character')
+        print('1. New character')
+        print('2. Load character')
         if user_character is not None:
             print('3. Edit character')
             print('4. View character')

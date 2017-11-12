@@ -9,7 +9,7 @@ Androids make excellent scientists, engineers, and doctors.
 
 Typical names: KX-159, D.A.T.A., SL1A, TikTok, G.O.L.E.M., Watson, Jeeves, C.H.I.P., Robby, A.L.P.H.A., Mk XIV, B.R.A.I.N.''',
     size='small, medium, or large',
-    strength=2, logic=2, luck=-99, power=-99,
+    strength=2, logic=2, luck=-99, psionics=-99,
     available_skills=['computers', 'engineering', 'running', 'linguistics', '[technical]'],
     exploits=[{'Name': 'Mindless', 'Desc': '''Androids are immune to any attacks which target MENTAL DEFENSE.'''},
               {'Name': 'Deterministic', 'Desc': '''An Android's PSI attribute can never rise above zero, and an Android cannot spend LUC dice to gain bonus dice when making attributes.'''},
@@ -103,7 +103,7 @@ Venetian adventurers tend to be priests, healers, and scientists.
 
 Typical names (male and female): Ashonn, Branmer, Kozain, Kalier, Tereval, Rathell, Sinehan, Nerrat, Dukhon, Deerenn, Delon, Mayen.''',
     size='medium',
-    agility=1, logic=2, luck=-2, power=3,
+    agility=1, logic=2, luck=-2, psionics=3,
     available_skills=['reactions', 'acrobatics', 'perception', 'concentration', 'religion',
                       '[scientific]'],
     exploits=[{'Name': 'Naturally psionic', 'Desc': '''A society which integrates psionics from childhood, Venetians start play with one free psionic exploit.'''},

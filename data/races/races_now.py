@@ -41,7 +41,7 @@ Chosen are a sub-set of designed. Mechanically identical to designed characters,
 
 Examples in popular culture include Buffy, Neo, Anakin Sywalker, or Harry Potter.''',
     size='medium',
-    power=3, reputation=2, strength=1, charisma=1,
+    chi=3, reputation=2, strength=1, charisma=1,
     available_skills=['negotiating', 'tactics', '[crafting]', '[trivia]', '[gaming]', '[scientific]'],
     exploits=[{'Name': 'Fast-Healing', 'Desc': '''Chosen heal faster than most people. You may roll an extra 2d6 when determining how much you naturally heal each day.'''},
               {'Name': 'Skill Focus', 'Desc': '''You start play with two bonus skills of your choice at 3 ranks (2d6).'''},
@@ -55,7 +55,7 @@ Mutants can be excellent users of CHI, exploring their power to great effect (wh
 
 Examples in popular culture include Killer Croc, Johnny Alpha, and many X-Men.''',
     size='small, medium, or large',
-    endurance=2, willpower=1, reputation=1, power=1,
+    endurance=2, willpower=1, reputation=1, chi=1,
     available_skills=['hardy', 'intimidate', 'resistance', 'survival', '[crafting]', '[trivia]', '[gaming]', 'disguise'],
     exploits=[{'Name': 'Mutation', 'Desc': '''Mutants have one or more mutations. Select one major or two minor mutations. You may select any number of cosmetic mutations, but you must choose at least one.'''}])
 
