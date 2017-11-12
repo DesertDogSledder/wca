@@ -120,7 +120,7 @@ career_woin_origin_martial_artist = Career(
     career_time='2d6+6',
     career_time_unit='years',
     prereq='none',
-    agility=1, endurance=1, willpower=1, power=1,
+    agility=1, endurance=1, willpower=1, chi=1,
     available_skills=['martial arts', 'acrobatics', 'religion', '[artistic]', 'staves', 'polearms'],
     desc='''The story of your youth involves disciplined, regimented schooling in a traditional style of fighting, typically at a dojo in a remote location.''',
     available_exploits=[{'Name': '''Training.''', 'Desc': '''Your training proves that the old ways are often the best, for more reasons than one. You receive a +1 bonus to all three DEFENSEs.'''}])
@@ -180,10 +180,10 @@ career_woin_origin_novice = Career(
     career_time='2d6+6',
     career_time_unit='years',
     prereq='none',
-    endurance=1, intuition=1, willpower=1, power=1,
+    endurance=1, intuition=1, willpower=1, psionics=1,
     available_skills=['religion', '[artistic]', '[crafting]', 'linguistics', 'martial arts', 'concentration', 'meditation'],
     desc='''You were brought up in a monastic or religious order.''',
-    available_exploits=[{'Name': '''Confidant''', 'Desc': '''Being brought up in a monastery has given you a certain perception. You can discern a lie through a mix of intuition and experience. You gain a +1d6 bonus to discernlies and deceptions.'''}])
+    available_exploits=[{'Name': '''Confidant''', 'Desc': '''Being brought up in a monastery has given you a certain perception. You can discern a lie through a mix of intuition and experience. You gain a +1d6 bonus to discern lies and deceptions.'''}])
 
 career_woin_origin_orphan = Career(
     name='Orphan',
@@ -290,7 +290,7 @@ career_woin_origin_talent = Career(
     career_time='2d6+6',
     career_time_unit='years',
     prereq='none',
-    intuition=1, willpower=1, power=1,
+    intuition=1, willpower=1, psionics=1,
     available_skills=['empathy', 'stealth', '[psionic]', '[performance]'],
     desc='''You manifested undisciplined psionic ability early in life, and struggled because of it.''',
     available_exploits=[{'Name': '''Empath''', 'Desc': '''You can sense strong emotions in those with whom you converse.'''}])
@@ -320,7 +320,7 @@ career_woin_origin_wizards_apprentice = Career(
     career_time='2d6+6',
     career_time_unit='years',
     prereq='none',
-    intuition=1, logic=1, power=1, reputation=1,
+    intuition=1, logic=1, magic=1, reputation=1,
     available_skills=['[artistic]', '[lore]', '[magical]', 'hypnotism'],
     desc='''Your childood was an academic one of study and lore.''',
     available_exploits=[{'Name': '''Prestidigitation''', 'Desc': '''You learned little magical tricks to help with your chores as an apprenstice. You are able to use small displays of magical presidigitation at-will to assist you with day-to-day inconveniences: cleaning clothes, keeping the rain or mud off, a tiny reading light, polishing silverware, and the like.'''}])

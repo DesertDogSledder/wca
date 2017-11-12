@@ -127,8 +127,8 @@ class Character(object):
 
 class Race(object):
     def __init__(self, name='Race', desc='Description', strength=0, agility=0, endurance=0, willpower=0, intuition=0,
-                 logic=0, charisma=0, luck=0, reputation=0, power=0, size='medium', available_skills=None,
-                 exploits=None):
+                 logic=0, charisma=0, luck=0, reputation=0, magic=0, chi=0, psionics=0, size='medium',
+                 available_skills=None, exploits=None):
         self.name = name
         self.desc = desc
         self.stats = collections.OrderedDict(STR=strength,
@@ -140,7 +140,9 @@ class Race(object):
                                              CHA=charisma,
                                              LUC=luck,
                                              REP=reputation,
-                                             POW=power)
+                                             MAG=magic,
+                                             CHI=chi,
+                                             PSI=psionics)
         self.size = size
         if available_skills is not None:
             self.available_skills = copy.deepcopy(available_skills)
@@ -174,7 +176,7 @@ class Race(object):
 
 class Homeworld(object):
     def __init__(self, name='Homeworld', strength=0, agility=0, endurance=0, willpower=0, intuition=0, logic=0,
-                 charisma=0, luck=0, reputation=0, power=0, available_skills=None):
+                 charisma=0, luck=0, reputation=0, magic=0, chi=0, psionics=0, available_skills=None):
         self.name = name
         self.stats = collections.OrderedDict(STR=strength,
                                              AGI=agility,
@@ -185,7 +187,9 @@ class Homeworld(object):
                                              CHA=charisma,
                                              LUC=luck,
                                              REP=reputation,
-                                             POW=power)
+                                             MAG=magic,
+                                             CHI=chi,
+                                             PSI=psionics)
         if available_skills is not None:
             self.available_skills = copy.deepcopy(available_skills)
         else:
@@ -207,7 +211,8 @@ class Homeworld(object):
 
 class Career(object):
     def __init__(self, name='Career', strength=0, agility=0, endurance=0, willpower=0, intuition=0, logic=0,
-                 charisma=0, luck=0, reputation=0, power=0, available_skills=None, available_exploits=None,
+                 charisma=0, luck=0, reputation=0, magic=0, chi=0, psionics=0,
+                 available_skills=None, available_exploits=None,
                  career_time='1d6', career_time_unit='years', desc='Description', prereq='none'):
         self.name = name
         self.stats = collections.OrderedDict(STR=strength,
@@ -219,7 +224,9 @@ class Career(object):
                                              CHA=charisma,
                                              LUC=luck,
                                              REP=reputation,
-                                             POW=power)
+                                             MAG=magic,
+                                             CHI=chi,
+                                             PSI=psionics)
         if available_skills is not None:
             self.available_skills = copy.deepcopy(available_skills)
         else:

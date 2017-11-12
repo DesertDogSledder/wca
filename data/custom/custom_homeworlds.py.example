@@ -17,12 +17,18 @@ custom_homeworld_list = []
 #     charisma=0,
 #     luck=0,
 #     reputation=0,
+#     magic=0,
+#     chi=0,
+#     psionics=0,
 #     available_skills=['farming', 'plowing'])
 # custom_homeworld_list.append(farmworld)
 #
 ########################################
 # DO NOT EDIT ANYTHING ABOVE THIS LINE #
 ########################################
+
+
+
 
 ########################################
 # DO NOT EDIT ANYTHING BELOW THIS LINE #

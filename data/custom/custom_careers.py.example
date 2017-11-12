@@ -1,9 +1,6 @@
 from lib.character import Career
 
 custom_career_list = []
-########################################
-# DO NOT EDIT ANYTHING ABOVE THIS LINE #
-########################################
 
 #
 # TEMPLATE
@@ -14,7 +11,8 @@ custom_career_list = []
 #     career_time='1d6',
 #     career_time_unit='years',
 #     prereq='none',
-#     strength=1, agility=1, endurance=1, intuition=0, logic=0, willpower=1, charisma=0, luck=0, reputation=0, power=0,
+#     strength=1, agility=1, endurance=1, intuition=0, logic=0, willpower=1, charisma=0, luck=0, reputation=0, magic=0,
+#     chi=0, psionics=0,
 #     available_skills=['[social]', '[crafting]', 'appraisal', 'brawling'],
 #     desc='''(requires INT 3+) Basketweaving is a great way to pay the bills. Some make a lifelong career of it.''',
 #     available_exploits=[{'Name': '''Basket bouncer''',
@@ -25,6 +23,12 @@ custom_career_list = []
 #                          'Desc': '''You can gather local gossip and information simply by spending an hour in a basketweaving club, effectively giving you the local knowledge skill wherever you go as long as you are able to refresh your knowledge at a local basketweaving club weekly.'''}])
 # custom_career_list.append(basketweaver)
 #
+########################################
+# DO NOT EDIT ANYTHING ABOVE THIS LINE #
+########################################
+
+
+
 
 ########################################
 # DO NOT EDIT ANYTHING BELOW THIS LINE #
