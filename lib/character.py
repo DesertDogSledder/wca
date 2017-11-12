@@ -1,6 +1,23 @@
 import collections
 import copy
 
+def calc_dice_pool_size(raw_score):
+    dice_pool_size = 0
+    if raw_score <= 2:
+        dice_pool_size = 1
+    elif raw_score <= 5:
+        dice_pool_size = 2
+    elif raw_score <= 9:
+        dice_pool_size = 3
+    elif raw_score <= 14:
+        dice_pool_size = 4
+    elif raw_score <= 20:
+        dice_pool_size = 5
+    else:
+        dice_pool_size = 6
+
+    return dice_pool_size
+
 
 class Character(object):
     def __init__(self, name='Devon Default', strength=3, agility=3, endurance=3, willpower=3, intuition=3, logic=3,
@@ -110,6 +127,66 @@ class Character(object):
         skill_total = collections.OrderedDict(sorted(skill_total.items(), key=lambda item: item))
         return skill_total
 
+    def calc_derived_stats(self):
+        derived_stats = collections.OrderedDict()
+        stat_total = self.calc_stat_total()
+        skill_total = self.calc_skill_total()
+        health_info = 'Roll END ({}d6) + WIL ({}d6)'.format(calc_dice_pool_size(stat_total['END']),
+                                                            calc_dice_pool_size(stat_total['WIL']))
+        if 'hardy' in skill_total:
+            health_info += ' + hardy ({}d6)'.format(calc_dice_pool_size(skill_total['hardy']))
+
+        derived_stats['Health'] = health_info
+
+        base_speed = calc_dice_pool_size(stat_total['STR']) + calc_dice_pool_size(stat_total['AGI'])
+        speed = base_speed
+        if 'running' in skill_total:
+            speed += calc_dice_pool_size(skill_total['running'])
+
+        climbing = base_speed
+        swimming = base_speed
+        zero_g = base_speed
+        high_g = base_speed
+
+        if 'climbing' in skill_total:
+            climbing += calc_dice_pool_size(skill_total['climbing'])
+        if 'swimming' in skill_total:
+            swimming += calc_dice_pool_size(skill_total['swimming'])
+        if 'zero-g' in skill_total:
+            zero_g += calc_dice_pool_size(skill_total['zero-g'])
+        if 'high-g' in skill_total:
+            high_g += calc_dice_pool_size(skill_total['high-g'])
+
+        climbing = climbing // 2
+        swimming = swimming // 2
+        zero_g = zero_g // 2
+        high_g = high_g // 2
+
+        derived_stats['Speed'] = speed
+        derived_stats['Climbing'] = climbing
+        derived_stats['Swimming'] = swimming
+        derived_stats['Zero-G'] = zero_g
+        derived_stats['High-G'] = high_g
+
+        derived_stats['Horizontal Jump'] = '{}\' (standing: {}\')'.format(stat_total['AGI']*2, stat_total['AGI'])
+        # Vertical jump values cannot exceed horizontal jump values
+        if stat_total['STR'] <= stat_total['AGI']:
+            vertical_jump_standing = stat_total['STR']
+            vertical_jump_running = stat_total['STR'] * 2
+        else:
+            vertical_jump_standing = stat_total['AGI']
+            vertical_jump_running = stat_total['AGI'] * 2
+        derived_stats['Vertical Jump'] = '{}\' (standing: {}\')'.format(vertical_jump_running, vertical_jump_standing)
+
+        if 'carry' in skill_total:
+            base_carry = (stat_total['STR'] + stat_total['END'] + skill_total['carry']) * 10
+        else:
+            base_carry = (stat_total['STR'] + stat_total['END']) * 10
+
+        derived_stats['Carry'] = '{} (before exploits and size modifiers)'.format(base_carry)
+
+        return derived_stats
+
     def get_all_exploits(self):
         all_exploits = []
         all_exploits += self.race.exploits
@@ -139,6 +216,10 @@ class Character(object):
         output += 'Exploits:\n'
         for exploit in self.get_all_exploits():
             output += '\t{}\n'.format(exploit['Name'])
+        output += 'Derived Statistics:\n'
+        for key, value in self.calc_derived_stats().items():
+            output += '\t{}: {}\n'.format(key, value)
+
         return output
 
 
