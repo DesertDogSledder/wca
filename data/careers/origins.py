@@ -321,7 +321,7 @@ career_woin_origin_wizards_apprentice = Career(
     career_time_unit='years',
     prereq='none',
     intuition=1, logic=1, magic=1, reputation=1,
-    available_skills=['[artistic]', '[lore]', '[magical]', 'hypnotism'],
+    available_skills=['[artistic]', '[lore]', '[magical]', 'hypnotism', 'prestidigitation'],
     desc='''Your childood was an academic one of study and lore.''',
     available_exploits=[{'Name': '''Prestidigitation''', 'Desc': '''You learned little magical tricks to help with your chores as an apprenstice. You are able to use small displays of magical presidigitation at-will to assist you with day-to-day inconveniences: cleaning clothes, keeping the rain or mud off, a tiny reading light, polishing silverware, and the like.'''}])
 
