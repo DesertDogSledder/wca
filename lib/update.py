@@ -17,14 +17,14 @@ def update_wca():
         err = err.decode().strip()
     except FileNotFoundError:
         print("\nError: Git not found. It's either not installed or not in "
-              "the PATH environment variable like requested in the guide.")
+              "the PATH environment variable.")
         return
     print(out)
     if p.returncode == 0:
         print("\nWCA has been updated.")
     else:
         print("\nWCA could not update properly. If this is caused by edits "
-              "you have made to the code you can try the repair option ")
+              "you have made to the code you can try the repair option.")
         print('Error message: {}'.format(err))
 
 
@@ -78,5 +78,5 @@ def repair_wca():
         print()
     except FileNotFoundError:
         print("\nError: Git not found. It's either not installed or not in "
-              "the PATH environment variable like requested in the guide.")
+              "the PATH environment variable.")
         return
