@@ -23,9 +23,12 @@ def update_wca():
     if p.returncode == 0:
         print("\nWCA has been updated.")
     else:
-        print("\nWCA could not update properly. If this is caused by edits "
-              "you have made to the code you can try the repair option.")
-        print('Error message: {}'.format(err))
+        if err == 'fatal: Not a git repository (or any of the parent directories): .git':
+            print('Git repository not yet initialized.  Run the repair option first.')
+        else:
+            print("\nWCA could not update properly. If this is caused by edits "
+                  "you have made to the code you can try the repair option.")
+            print('Error message: {}'.format(err))
 
 
 def repair_wca():
