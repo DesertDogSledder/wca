@@ -1,9 +1,13 @@
 import collections
 import copy
+import textwrap
+import shutil
+
 
 def calc_dice_pool_size(raw_score):
-    dice_pool_size = 0
-    if raw_score <= 2:
+    if raw_score <= 0:
+        dice_pool_size = 0
+    elif raw_score <= 2:
         dice_pool_size = 1
     elif raw_score <= 5:
         dice_pool_size = 2
@@ -19,11 +23,32 @@ def calc_dice_pool_size(raw_score):
     return dice_pool_size
 
 
+def calc_max_dice_pool_size(career_grade):
+    if career_grade <= 5:
+        max_dice_pool_size = career_grade
+    elif career_grade <= 7:
+        max_dice_pool_size = 6
+    elif career_grade <= 10:
+        max_dice_pool_size = 7
+    elif career_grade <= 14:
+        max_dice_pool_size = 8
+    elif career_grade <= 19:
+        max_dice_pool_size = 9
+    elif career_grade <= 25:
+        max_dice_pool_size = 10
+    elif career_grade <= 32:
+        max_dice_pool_size = 11
+    else:
+        max_dice_pool_size = 12
+
+    return max_dice_pool_size
+
+
 class Character(object):
-    def __init__(self, name='Devon Default', strength=3, agility=3, endurance=3, willpower=3, intuition=3, logic=3,
+    def __init__(self, name='unnamed', strength=3, agility=3, endurance=3, willpower=3, intuition=3, logic=3,
                  charisma=3, luck=3, reputation=0, magic=0, chi=0, psionics=0, race=None, race_stats=None,
-                 homeworld=None, hook=None, career_track=None, notes='', race_skill_choices=None,
-                 homeworld_skill_choices=None, trait=None, misc_exploits=None):
+                 homeworld=None, hook='unset', career_track=None, notes='', race_skill_choices=None,
+                 homeworld_skill_choices=None, trait=None, misc_exploits=None, age_descriptor='unset'):
         self.name = name
         self.stats = collections.OrderedDict(STR=strength,
                                              AGI=agility,
@@ -38,7 +63,9 @@ class Character(object):
                                              CHI=chi,
                                              PSI=psionics)
         self.race = copy.deepcopy(race)
-        if self.race is not None:
+        if race_stats is not None:
+            self.race_stats = copy.deepcopy(race_stats)
+        elif self.race is not None:
             self.race_stats = copy.deepcopy(self.race.stats)
         else:
             self.race_stats = collections.OrderedDict(STR=0,
@@ -67,10 +94,7 @@ class Character(object):
         else:
             self.homeworld_skill_choices = []
 
-        if hook is not None:
-            self.hook = copy.deepcopy(hook)
-        else:
-            self.hook = {'Hook': 'unset', 'Attribute': 'strength'}
+        self.hook = hook
 
         if career_track is not None:
             self.career_track = copy.deepcopy(career_track)
@@ -88,6 +112,7 @@ class Character(object):
         else:
             self.misc_exploits = []
 
+        self.age_descriptor = age_descriptor
         self.notes = notes
 
     def calc_stat_total(self):
@@ -198,27 +223,44 @@ class Character(object):
         return all_exploits
 
     def __str__(self):
-        output = 'Name: {}\n'.format(self.name)
+        terminal_size = shutil.get_terminal_size()
+        width = terminal_size[0]
+
+        if len(self.career_track) > 0:
+            output = '{}\n'.format(self.name)
+            if self.age_descriptor[0] in 'aeiou':
+                output += 'an '
+            else:
+                output += 'a '
+            output += '{} {} {} {} who {} ({}d6)\n\n'.format(self.age_descriptor, self.trait['Name'].lower(), self.race.name,
+                                                             self.career_track[len(self.career_track)-1]['Career'].name.lower(),
+                                                             self.hook, calc_max_dice_pool_size(len(self.career_track)))
+        else:
+            output = ''
+        output += 'Name: {}\n'.format(self.name)
         output += 'Race: {}\n'.format(self.race.name)
         output += 'Homeworld: {}\n'.format(self.homeworld.name)
-        output += 'Hook ({}): {}\n'.format(self.hook['Attribute'], self.hook['Hook'])
+        output += 'Hook: {}\n'.format(self.hook)
         output += 'Career track:\n'
         count = 1
         for career in self.career_track:
-            output += '\t[{}] {} ({})\n'.format(count, career['Career'].name, career['Length'])
+            output += '    [{}] {} ({})\n'.format(count, career['Career'].name, career['Length'])
             count += 1
-        output += 'Stat totals:\n'
+        output += '\nStat totals:\n'
         for key, value in self.calc_stat_total().items():
-            output += '\t{}: {}\n'.format(key, value)
-        output += 'Skill totals:\n'
+            output += '    {}: {} ({}d6)\n'.format(key, value, calc_dice_pool_size(value))
+        output += '\nSkill totals:\n'
         for key, value in self.calc_skill_total().items():
-            output += '\t{}: {}\n'.format(key, value)
-        output += 'Exploits:\n'
+            output += '    {}: {} ({}d6)\n'.format(key, value, calc_dice_pool_size(value))
+        output += '\nExploits:\n'
         for exploit in self.get_all_exploits():
-            output += '\t{}\n'.format(exploit['Name'])
+            output += '    {} - '.format(exploit['Name'])
+            for line in textwrap.wrap((exploit['Desc']), width-len(exploit['Name'])):
+                output += '{}\n        '.format(line)
+            output += '\n'
         output += 'Derived Statistics:\n'
         for key, value in self.calc_derived_stats().items():
-            output += '\t{}: {}\n'.format(key, value)
+            output += '        {}: {}\n'.format(key, value)
 
         return output
 
@@ -267,7 +309,7 @@ class Race(object):
 
         output += 'Exploits:\n'
         for exploit in self.exploits:
-            output += '\t{} - {}\n'.format(exploit['Name'], exploit['Desc'])
+            output += '        {} - {}\n'.format(exploit['Name'], exploit['Desc'])
 
         return output
 
@@ -353,6 +395,6 @@ class Career(object):
 
         output += 'Available exploits:\n'
         for exploit in self.available_exploits:
-            output += '\t{} - {}\n'.format(exploit['Name'], exploit['Desc'])
+            output += '        {} - {}\n'.format(exploit['Name'], exploit['Desc'])
 
         return output

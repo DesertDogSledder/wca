@@ -57,7 +57,8 @@ def new_character():
             return
 
     user_character = character.Character(race=copy.deepcopy(races_new.race_new_human),
-                                         homeworld=copy.deepcopy(homeworlds_new.homeworld_none))
+                                         homeworld=copy.deepcopy(homeworlds_new.homeworld_none),
+                                         age_descriptor='young')
 
     print('New character initialized.  Use the \'Edit Character\' menu to start making changes!')
     tui.wait()
@@ -72,11 +73,12 @@ def edit_character():
         print('{}\n'.format(menu_name))
         print('1. Name ({})'.format(user_character.name))
         print('2. Race ({})'.format(user_character.race.name))
-        print('3. Hook')
+        print('3. Hook ({})'.format(user_character.hook))
         print('4. Homeworld ({})'.format(user_character.homeworld.name))
         print('5. Careers')
         print('6. Trait ({})'.format(user_character.trait['Name']))
         print('7. Misc exploits')
+        print('8. Age descriptor ({})'.format(user_character.age_descriptor))
         print('\n0. Back')
 
         selection = tui.user_selection()
@@ -86,7 +88,7 @@ def edit_character():
         elif selection == '2':
             edit_race(menu_name)
         elif selection == '3':
-            edit_hook_main(menu_name)
+            edit_hook(menu_name)
         elif selection == '4':
             edit_homeworld(menu_name)
         elif selection == '5':
@@ -95,6 +97,8 @@ def edit_character():
             edit_trait(menu_name)
         elif selection == '7':
             edit_misc_exploits(menu_name)
+        elif selection == '8':
+            edit_age_descriptor(menu_name)
         elif selection == '0':
             break
 
@@ -440,36 +444,13 @@ def edit_homeworld_skills(parent_menu):
             user_character.homeworld_skill_choices.remove(selection)
 
 
-def edit_hook_main(parent_menu):
+def edit_hook(parent_menu):
     global user_character
-    menu_name = '{} >> Hook'.format(parent_menu)
-    while True:
-        tui.clear_screen()
-        print(banner)
-        print('{}\n'.format(menu_name))
-        print('Hook: {}'.format(user_character.hook['Hook']))
-        print('Hook Attribute: {}\n'.format(user_character.hook['Attribute']))
-
-        print('1. Set hook')
-        print('2. Set hook attribute')
-        print('\n0. Back\n')
-
-        selection = tui.user_selection()
-
-        if selection == '1':
-            edit_hook_sub(menu_name)
-        elif selection == '2':
-            edit_hook_attribute(menu_name)
-        elif selection == '0':
-            break
-
-
-def edit_hook_sub(parent_menu):
     menu_name = '{} >> Edit Hook'.format(parent_menu)
     tui.clear_screen()
     print(banner)
     print('{}\n'.format(menu_name))
-    print('Hook: {}\n'.format(user_character.hook['Hook']))
+    print('Hook: {}\n'.format(user_character.hook))
 
     print('Enter new hook')
     print('Leave blank to abort and return to previous menu')
@@ -477,23 +458,7 @@ def edit_hook_sub(parent_menu):
     selection = tui.user_selection()
 
     if selection != '':
-        user_character.hook['Hook'] = selection
-
-
-def edit_hook_attribute(parent_menu):
-    menu_name = '{} >> Edit Hook Attribute'.format(parent_menu)
-    tui.clear_screen()
-    print(banner)
-    print('{}\n'.format(menu_name))
-    print('Hook Attribute: {}\n'.format(user_character.hook['Attribute']))
-
-    print('Enter new hook attribute')
-    print('Leave blank to abort and return to previous menu')
-
-    selection = tui.user_selection()
-
-    if selection != '':
-        user_character.hook['Attribute'] = selection
+        user_character.hook = selection
 
 
 def edit_careers(parent_menu):
@@ -1153,6 +1118,29 @@ def remove_misc_exploits(parent_menu):
             pass
         except IndexError:
             pass
+
+
+def edit_age_descriptor(parent_menu):
+    global user_character
+    menu_name = '{} >> Edit Age Descriptor'.format(parent_menu)
+    info = "Your age is determined by the total of your character's years in each career and is based on their " \
+           "species.\nExamples: 'young', 'adult', 'old', 'immortal', 'mechanical'"
+    terminal_size = shutil.get_terminal_size()
+    width = terminal_size[0]
+    tui.clear_screen()
+    print(banner)
+    print('{}\n'.format(menu_name))
+    for line in textwrap.wrap(info, width):
+        print(line)
+    print('\nCurrent age descriptor: {}\n'.format(user_character.age_descriptor))
+
+    print('Enter new age descriptor')
+    print('Leave blank to abort and return to previous menu')
+
+    selection = tui.user_selection()
+
+    if selection != '':
+        user_character.age_descriptor = selection
 
 
 def load_character():
