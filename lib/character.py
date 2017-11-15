@@ -172,6 +172,7 @@ class Character(object):
         swimming = base_speed
         zero_g = base_speed
         high_g = base_speed
+        low_g = base_speed
 
         if 'climbing' in skill_total:
             climbing += calc_dice_pool_size(skill_total['climbing'])
@@ -181,17 +182,21 @@ class Character(object):
             zero_g += calc_dice_pool_size(skill_total['zero-g'])
         if 'high-g' in skill_total:
             high_g += calc_dice_pool_size(skill_total['high-g'])
+        if 'low-g' in skill_total:
+            low_g += calc_dice_pool_size(skill_total['low-g'])
 
         climbing = climbing // 2
         swimming = swimming // 2
         zero_g = zero_g // 2
         high_g = high_g // 2
+        low_g = low_g // 2
 
         derived_stats['Speed'] = speed
         derived_stats['Climbing'] = climbing
         derived_stats['Swimming'] = swimming
         derived_stats['Zero-G'] = zero_g
         derived_stats['High-G'] = high_g
+        derived_stats['Low-G'] = low_g
 
         derived_stats['Horizontal Jump'] = '{}\' (standing: {}\')'.format(stat_total['AGI']*2, stat_total['AGI'])
         # Vertical jump values cannot exceed horizontal jump values
@@ -295,7 +300,11 @@ class Race(object):
             self.available_skills = []
 
     def __str__(self):
+        terminal_size = shutil.get_terminal_size()
+        width = terminal_size[0]
         output = '{}\n'.format(self.name)
+        for line in textwrap.wrap(self.desc, width):
+            output += '{}\n'.format(line)
         output += 'Size: {}\n'.format(self.size)
         for key, value in self.stats.items():
             if value < 0 or value > 0:
@@ -309,7 +318,10 @@ class Race(object):
 
         output += 'Exploits:\n'
         for exploit in self.exploits:
-            output += '        {} - {}\n'.format(exploit['Name'], exploit['Desc'])
+            output += '    {} - '.format(exploit['Name'])
+            for line in textwrap.wrap((exploit['Desc']), width - len(exploit['Name'])):
+                output += '{}\n        '.format(line)
+            output += '\n'
 
         return output
 
