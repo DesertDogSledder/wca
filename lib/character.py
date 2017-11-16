@@ -2,6 +2,7 @@ import collections
 import copy
 import textwrap
 import shutil
+import math
 
 
 def calc_dice_pool_size(raw_score):
@@ -185,11 +186,11 @@ class Character(object):
         if 'low-g' in skill_total:
             low_g += calc_dice_pool_size(skill_total['low-g'])
 
-        climbing = climbing // 2
-        swimming = swimming // 2
-        zero_g = zero_g // 2
-        high_g = high_g // 2
-        low_g = low_g // 2
+        climbing = math.ceil(climbing / 2)
+        swimming = math.ceil(swimming / 2)
+        zero_g = math.ceil(zero_g / 2)
+        high_g = math.ceil(high_g / 2)
+        low_g = math.ceil(low_g / 2)
 
         derived_stats['Speed'] = speed
         derived_stats['Climbing'] = climbing

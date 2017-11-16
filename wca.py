@@ -257,7 +257,7 @@ def edit_race_skills(parent_menu):
         print('Leave blank to abort and return to previous menu')
         selection = tui.user_selection().lower()
 
-        if selection == '':
+        if selection == '' or selection == '0':
             break
 
         if selection not in user_character.race_skill_choices:
@@ -296,7 +296,7 @@ def edit_race_stats(parent_menu):
         print('Leave blank to abort and return to previous menu')
         selection = tui.user_selection().upper()[:3]
 
-        if selection == '':
+        if selection == '' or selection == '0':
             break
         elif selection in user_character.race_stats:
             try:
@@ -434,7 +434,7 @@ def edit_homeworld_skills(parent_menu):
         print('Leave blank to abort and return to previous menu')
         selection = tui.user_selection().lower()
 
-        if selection == '':
+        if selection == '' or selection == '0':
             break
 
         if selection not in user_character.homeworld_skill_choices:
@@ -723,7 +723,7 @@ def edit_career_details_skills(parent_menu, index):
         print('Leave blank to abort and return to previous menu')
         selection = tui.user_selection().lower()
 
-        if selection == '':
+        if selection == '' or selection == '0':
             break
 
         if selection not in user_character.career_track[index]['Skills']:
@@ -838,7 +838,7 @@ def edit_career_details_stats(parent_menu, index):
         print('Leave blank to abort and return to previous menu')
         selection = tui.user_selection().upper()[:3]
 
-        if selection == '':
+        if selection == '' or selection == '0':
             break
         elif selection in user_character.career_track[index]['Stats']:
             try:
@@ -1170,7 +1170,7 @@ def load_character():
     print('Leave blank to abort and return to previous menu')
     selection = tui.user_selection()
 
-    if selection == '':
+    if selection == '' or selection == '0':
         return
 
     try:
@@ -1200,7 +1200,7 @@ def save_character():
     print('Leave blank to abort and return to previous menu')
     selection = tui.user_selection()
 
-    if selection == '':
+    if selection == '' or selection == '0':
         return
 
     character_files = [f for f in listdir('./characters') if isfile(join('./characters', f)) and '.wca' in f]
