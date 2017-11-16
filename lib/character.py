@@ -157,13 +157,31 @@ class Character(object):
         derived_stats = collections.OrderedDict()
         stat_total = self.calc_stat_total()
         skill_total = self.calc_skill_total()
-        health_info = 'Roll END ({}d6) + WIL ({}d6)'.format(calc_dice_pool_size(stat_total['END']),
-                                                            calc_dice_pool_size(stat_total['WIL']))
+
+        ##########
+        # HEALTH #
+        ##########
+        end_dice_pool = calc_dice_pool_size(stat_total['END'])
+        wil_dice_pool = calc_dice_pool_size(stat_total['WIL'])
+        average_health = end_dice_pool + wil_dice_pool
+        health_info = 'Roll END ({}d6) + WIL ({}d6)'.format(end_dice_pool, wil_dice_pool)
+
         if 'hardy' in skill_total:
-            health_info += ' + hardy ({}d6)'.format(calc_dice_pool_size(skill_total['hardy']))
+            hardy_dice_pool = calc_dice_pool_size(skill_total['hardy'])
+            health_info += ' + hardy ({}d6)'.format(hardy_dice_pool)
+            average_health += hardy_dice_pool
+
+        average_health *= 3.5
+        if average_health >= 10:
+            health_info += ' (average = {})'.format(average_health)
+        else:
+            health_info += ' (average bumped up to minimum = 10)'
 
         derived_stats['Health'] = health_info
 
+        #########
+        # SPEED #
+        #########
         base_speed = calc_dice_pool_size(stat_total['STR']) + calc_dice_pool_size(stat_total['AGI'])
         speed = base_speed
         if 'running' in skill_total:
@@ -199,6 +217,9 @@ class Character(object):
         derived_stats['High-G'] = high_g
         derived_stats['Low-G'] = low_g
 
+        ########
+        # JUMP #
+        ########
         derived_stats['Horizontal Jump'] = '{}\' (standing: {}\')'.format(stat_total['AGI']*2, stat_total['AGI'])
         # Vertical jump values cannot exceed horizontal jump values
         if stat_total['STR'] <= stat_total['AGI']:
@@ -209,6 +230,9 @@ class Character(object):
             vertical_jump_running = stat_total['AGI'] * 2
         derived_stats['Vertical Jump'] = '{}\' (standing: {}\')'.format(vertical_jump_running, vertical_jump_standing)
 
+        #########
+        # CARRY #
+        #########
         if 'carry' in skill_total:
             base_carry = (stat_total['STR'] + stat_total['END'] + skill_total['carry']) * 10
         else:
@@ -238,9 +262,12 @@ class Character(object):
                 output += 'an '
             else:
                 output += 'a '
-            output += '{} {} {} {} who {} ({}d6)\n\n'.format(self.age_descriptor, self.trait['Name'].lower(), self.race.name,
-                                                             self.career_track[len(self.career_track)-1]['Career'].name.lower(),
-                                                             self.hook, calc_max_dice_pool_size(len(self.career_track)))
+            output += '{} {} {} {} who {} ({}d6)\n\n'.format(self.age_descriptor, self.trait['Name'].lower(),
+                                                             self.race.name,
+                                                             self.career_track[len(self.career_track)-1]
+                                                             ['Career'].name.lower(),
+                                                             self.hook,
+                                                             calc_max_dice_pool_size(len(self.career_track)))
         else:
             output = ''
         output += 'Name: {}\n'.format(self.name)
