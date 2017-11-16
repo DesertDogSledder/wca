@@ -352,7 +352,7 @@ def set_homeworld_main(parent_menu):
         if selection == '1':
             set_homeworld_sub(menu_name, 'NEW homeworlds', homeworlds_new.homeworld_new_list)
         elif selection == '2' and custom_homeworlds_loaded:
-            set_homeworld_sub(menu_name, 'Custom homeworlds',custom_homeworlds.custom_homeworld_list)
+            set_homeworld_sub(menu_name, 'Custom homeworlds', custom_homeworlds.custom_homeworld_list)
         elif selection == '0':
             break
 
@@ -795,7 +795,9 @@ def edit_career_details_exploits_sub(parent_menu, sub_menu_name, index, exploit_
         try:
             num_selection = int(selection)
             tui.clear_screen()
-            print('{} - {}'.format(exploit_list[num_selection-1]['Name'], exploit_list[num_selection-1]['Desc']))
+            print(exploit_list[num_selection-1]['Name'])
+            for line in textwrap.wrap(exploit_list[num_selection-1]['Desc'], width):
+                print('    {}'.format(line))
             print('\nSelect this exploit?')
             if tui.select_yes_no():
                 user_character.career_track[index]['Exploit'] = copy.deepcopy(exploit_list[num_selection-1])
@@ -961,10 +963,11 @@ def edit_trait(parent_menu):
         try:
             num_selection = int(selection)
 
-            print('{} - {}'.format(exploits_traits.exploit_traits_list[num_selection-1]['Name'],
-                                   exploits_traits.exploit_traits_list[num_selection-1]['Desc']))
+            print(exploits_traits.exploit_traits_list[num_selection-1]['Name'])
+            for line in textwrap.wrap(exploits_traits.exploit_traits_list[num_selection-1]['Desc'], width):
+                print('    {}'.format(line))
 
-            print('Select this trait?')
+            print('\nSelect this trait?')
             if tui.select_yes_no():
                 user_character.trait = copy.deepcopy(exploits_traits.exploit_traits_list[num_selection-1])
                 break
@@ -1068,7 +1071,10 @@ def add_misc_exploits_sub(parent_menu, sub_menu_name, exploit_list):
         try:
             num_selection = int(selection)
             tui.clear_screen()
-            print('{} - {}'.format(exploit_list[num_selection-1]['Name'], exploit_list[num_selection-1]['Desc']))
+            print(exploit_list[num_selection-1]['Name'])
+            for line in textwrap.wrap(exploit_list[num_selection-1]['Desc'], width):
+                print('    {}'.format(line))
+
             print('\nSelect this exploit?')
             if tui.select_yes_no() and exploit_list[num_selection-1] not in user_character.misc_exploits:
                 user_character.misc_exploits.append(copy.deepcopy(exploit_list[num_selection-1]))
@@ -1089,7 +1095,7 @@ def remove_misc_exploits(parent_menu):
         print(banner)
         print('{}\n'.format(menu_name))
 
-        width = terminal_size[0] // 3
+        width = terminal_size[0]
         count = 1
         for exploit in user_character.misc_exploits:
             if not count % 3 == 0:
@@ -1109,9 +1115,10 @@ def remove_misc_exploits(parent_menu):
 
         try:
             num_selection = int(selection)
-            print('{} - {}'.format(user_character.misc_exploits[num_selection-1]['Name'],
-                                   user_character.misc_exploits[num_selection-1]['Desc']))
-            print('Remove this exploit?')
+            print(user_character.misc_exploits[num_selection-1]['Name'])
+            for line in textwrap.wrap(user_character.misc_exploits[num_selection-1]['Desc'], width):
+                print('    {}'.format(line))
+            print('\nRemove this exploit?')
             if tui.select_yes_no():
                 user_character.misc_exploits.pop(num_selection-1)
         except ValueError:

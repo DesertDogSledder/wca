@@ -261,7 +261,7 @@ class Character(object):
         for exploit in self.get_all_exploits():
             output += '    {} - '.format(exploit['Name'])
             for line in textwrap.wrap((exploit['Desc']), width-len(exploit['Name'])):
-                output += '{}\n        '.format(line)
+                output += '{}\n    '.format(line)
             output += '\n'
         output += 'Derived Statistics:\n'
         for key, value in self.calc_derived_stats().items():
@@ -320,7 +320,7 @@ class Race(object):
         for exploit in self.exploits:
             output += '    {} - '.format(exploit['Name'])
             for line in textwrap.wrap((exploit['Desc']), width - len(exploit['Name'])):
-                output += '{}\n        '.format(line)
+                output += '{}\n    '.format(line)
             output += '\n'
 
         return output
@@ -393,6 +393,8 @@ class Career(object):
         self.prereq = prereq
 
     def __str__(self):
+        terminal_size = shutil.get_terminal_size()
+        width = terminal_size[0]
         output = '{}\n'.format(self.name)
         output += 'Prerequisities: {}\n'.format(self.prereq)
         output += 'Description: {}\n'.format(self.desc)
@@ -407,6 +409,9 @@ class Career(object):
 
         output += 'Available exploits:\n'
         for exploit in self.available_exploits:
-            output += '        {} - {}\n'.format(exploit['Name'], exploit['Desc'])
+            output += '    {} - '.format(exploit['Name'])
+            for line in textwrap.wrap((exploit['Desc']), width-len(exploit['Name'])):
+                output += '{}\n    '.format(line)
+            output += '\n'
 
         return output
