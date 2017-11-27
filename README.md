@@ -9,6 +9,7 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 * [Python 3](https://www.python.org/)
+* [wxPython 4.0](https://wxpython.org/pages/downloads/)
 * [git](https://git-scm.com/downloads) (for update functionality)
 
 
@@ -21,6 +22,8 @@ Run `launcher.py` to launch, update, or repair the application.
 ## Built With
 
 * [Python 3.6.3](https://www.python.org/)
+* [wxPython 4.0](https://wxpython.org/)
+* [wxFormBuilder](https://github.com/wxFormBuilder/wxFormBuilder)
 
 ## Authors
 
