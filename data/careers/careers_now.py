@@ -1426,7 +1426,7 @@ career_now_warrior_monk = Career(
     available_skills=['[artistic]', 'acrobatics', 'dancing', 'martial arts', 'philosophy', 'religion', 'staves'],
     desc="You became a member of a martial monastic order, and were trained in philosophy and martial arts. You "
          "should also take grades in a martial arts career.",
-    available_exploits=[{'Name': 'Defensive Stance.',
+    available_exploits=[{'Name': 'Defensive Stance',
                          'Desc': "You gain +4 to your MELEE DEFENSE as long as you are unarmed and not wielding a "
                                  "shield or wearing armor. This does not stack with Drunken Fist."},
                         {'Name': 'Drunken Fist',

@@ -47,16 +47,16 @@ def calc_max_dice_pool_size(career_grade):
 
 class Character(object):
     def __init__(self, name='unnamed', strength=3, agility=3, endurance=3, willpower=3, intuition=3, logic=3,
-                 charisma=3, luck=3, reputation=0, magic=0, chi=0, psionics=0, race=None, race_stats=None,
+                 charisma=3, luck=3, reputation=0, magic=0, chi=0, psionics=0, race=None,
                  homeworld=None, hook='unset', career_track=None, notes='', race_skill_choices=None,
                  homeworld_skill_choices=None, trait=None, misc_exploits=None, age_descriptor='unset'):
         self.name = name
         self.stats = collections.OrderedDict(STR=strength,
                                              AGI=agility,
                                              END=endurance,
-                                             WIL=willpower,
                                              INT=intuition,
                                              LOG=logic,
+                                             WIL=willpower,
                                              CHA=charisma,
                                              LUC=luck,
                                              REP=reputation,
@@ -64,23 +64,7 @@ class Character(object):
                                              CHI=chi,
                                              PSI=psionics)
         self.race = copy.deepcopy(race)
-        if race_stats is not None:
-            self.race_stats = copy.deepcopy(race_stats)
-        elif self.race is not None:
-            self.race_stats = copy.deepcopy(self.race.stats)
-        else:
-            self.race_stats = collections.OrderedDict(STR=0,
-                                                      AGI=0,
-                                                      END=0,
-                                                      WIL=0,
-                                                      INT=0,
-                                                      LOG=0,
-                                                      CHA=0,
-                                                      LUC=0,
-                                                      REP=0,
-                                                      MAG=0,
-                                                      CHI=0,
-                                                      PSI=0)
+
         if race_skill_choices is not None:
             self.race_skill_choices = copy.deepcopy(race_skill_choices)
             self.race_skill_choices.sort()
@@ -119,10 +103,10 @@ class Character(object):
     def calc_stat_total(self):
         stat_total = copy.deepcopy(self.stats)
 
-        for stat, value in self.race_stats.items():
+        for stat, value in self.race['Stats'].items():
             stat_total[stat] += value
 
-        for stat, value in self.homeworld.stats.items():
+        for stat, value in self.homeworld['Homeworld'].stats.items():
             stat_total[stat] += value
 
         for career in self.career_track:
@@ -244,7 +228,8 @@ class Character(object):
 
     def get_all_exploits(self):
         all_exploits = []
-        all_exploits += self.race.exploits
+        all_exploits += self.race['Race'].exploits
+        all_exploits.append(self.trait)
         for career in self.career_track:
             all_exploits.append(career['Exploit'])
         all_exploits += self.misc_exploits
@@ -263,7 +248,7 @@ class Character(object):
             else:
                 output += 'a '
             output += '{} {} {} {} who {} ({}d6)\n\n'.format(self.age_descriptor, self.trait['Name'].lower(),
-                                                             self.race.name,
+                                                             self.race['Race'].name,
                                                              self.career_track[len(self.career_track)-1]
                                                              ['Career'].name.lower(),
                                                              self.hook,
@@ -271,8 +256,8 @@ class Character(object):
         else:
             output = ''
         output += 'Name: {}\n'.format(self.name)
-        output += 'Race: {}\n'.format(self.race.name)
-        output += 'Homeworld: {}\n'.format(self.homeworld.name)
+        output += 'Race: {}\n'.format(self.race['Race'].name)
+        output += 'Homeworld: {}\n'.format(self.homeworld['Homeworld'].name)
         output += 'Hook: {}\n'.format(self.hook)
         output += 'Career track:\n'
         count = 1
@@ -307,9 +292,9 @@ class Race(object):
         self.stats = collections.OrderedDict(STR=strength,
                                              AGI=agility,
                                              END=endurance,
-                                             WIL=willpower,
                                              INT=intuition,
                                              LOG=logic,
+                                             WIL=willpower,
                                              CHA=charisma,
                                              LUC=luck,
                                              REP=reputation,
@@ -361,9 +346,9 @@ class Homeworld(object):
         self.stats = collections.OrderedDict(STR=strength,
                                              AGI=agility,
                                              END=endurance,
-                                             WIL=willpower,
                                              INT=intuition,
                                              LOG=logic,
+                                             WIL=willpower,
                                              CHA=charisma,
                                              LUC=luck,
                                              REP=reputation,
@@ -398,9 +383,9 @@ class Career(object):
         self.stats = collections.OrderedDict(STR=strength,
                                              AGI=agility,
                                              END=endurance,
-                                             WIL=willpower,
                                              INT=intuition,
                                              LOG=logic,
+                                             WIL=willpower,
                                              CHA=charisma,
                                              LUC=luck,
                                              REP=reputation,

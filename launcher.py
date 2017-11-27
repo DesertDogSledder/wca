@@ -1,5 +1,5 @@
 from lib import tui, update
-import wca
+import wca_gui_wx
 
 banner = ('=================================\n'
           'WOIN Character Assistant Launcher\n'
@@ -21,7 +21,7 @@ def main():
         selection = tui.user_selection()
 
         if selection == '1':
-            wca.main()
+            wca_gui_wx.main()
             break
         elif selection == '2':
             update.update_wca()

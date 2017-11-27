@@ -29,7 +29,7 @@ custom_race_list = []
 ########################################
 # DO NOT EDIT ANYTHING BELOW THIS LINE #
 ########################################
-custom_race_list.sort(key=lambda x: x.name)
+# custom_race_list.sort(key=lambda x: x.name)
 for race in custom_race_list:
     race.available_skills.sort()
     race.exploits.sort(key=lambda x: x['Name'])

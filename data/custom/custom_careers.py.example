@@ -33,6 +33,6 @@ custom_career_list = []
 ########################################
 # DO NOT EDIT ANYTHING BELOW THIS LINE #
 ########################################
-custom_career_list.sort(key=lambda x: x.name)
+# custom_career_list.sort(key=lambda x: x.name)
 for career in custom_career_list:
     career.available_skills.sort()
