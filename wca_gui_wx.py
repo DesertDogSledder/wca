@@ -3229,7 +3229,7 @@ class AddExploitDialog(wx.Dialog):
         self.EndModal(wx.ID_CANCEL)
 
 
-if __name__ == '__main__':
+def main():
     ######################
     # Launch application #
     ######################
@@ -3237,3 +3237,6 @@ if __name__ == '__main__':
     main_window = WCA_Frame(None)
     main_window.Show()
     app.MainLoop()
+
+if __name__ == '__main__':
+    main()
