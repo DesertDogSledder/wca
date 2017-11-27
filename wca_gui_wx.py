@@ -1416,9 +1416,9 @@ class WCA_Frame(wx.Frame):
             self.user_character.career_track[career_track_index]['Exploit']['Source'] = \
                 set_career_exploit.get_list_source()
 
-            self.lb_careers_list.SetSelection(career_track_index)
             self.update_career_tab(None)
             self.update_overview_tab(None)
+            self.lb_careers_list.SetSelection(career_track_index)
             self.on_career_select(None)
 
     def edit_career_skills(self, event):
@@ -3154,7 +3154,9 @@ class AddExploitDialog(wx.Dialog):
         self.b_aed_ok.Bind(wx.EVT_BUTTON, self.on_ok)
         self.b_aed_cancel.Bind(wx.EVT_BUTTON, self.on_cancel)
 
-        if career is None:
+        self.career = career
+
+        if self.career is None:
             self.rb_aed_career.Enable(False)
             self.rb_aed_career.Hide()
         if not custom_exploits_loaded:
