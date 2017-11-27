@@ -2,12 +2,13 @@ from lib import tui, update
 try:
     import wca_gui_wx
 except ModuleNotFoundError:
-    message = ('Failed to launch WCA GUI. Do you have wxPython installed? Try typing\n'
+    message = ('WX module not found. Do you have wxPython installed? Try typing\n'
                '    pip install -U wxPython\n'
                'or visit https://wxpython.org/pages/downloads/ for more information on how to install '
                'wxPython')
     print(message)
     tui.wait()
+    exit(1)
 banner = ('=================================\n'
           'WOIN Character Assistant Launcher\n'
           '=================================\n')
