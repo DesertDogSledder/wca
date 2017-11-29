@@ -1186,7 +1186,7 @@ class WCA_Frame(wx.Frame):
             self.update_overview_tab(None)
 
     def edit_race_skills(self, event):
-        race_skills_dialog = EditSkillsDialog(self)
+        race_skills_dialog = EditSkillsDialog(self, self.user_character.race['Race'].available_skills)
         for skill in self.user_character.race_skill_choices:
             race_skills_dialog.lb_esd_skills_list.Append(skill)
         results = race_skills_dialog.ShowModal()
@@ -1230,7 +1230,7 @@ class WCA_Frame(wx.Frame):
             self.update_overview_tab(None)
 
     def edit_homeworld_skills(self, event):
-        homeworld_skills_dialog = EditSkillsDialog(self)
+        homeworld_skills_dialog = EditSkillsDialog(self, self.user_character.homeworld['Homeworld'].available_skills)
         for skill in self.user_character.homeworld_skill_choices:
             homeworld_skills_dialog.lb_esd_skills_list.Append(skill)
         results = homeworld_skills_dialog.ShowModal()
@@ -1396,7 +1396,8 @@ class WCA_Frame(wx.Frame):
 
     def edit_career_skills(self, event):
         selected_career = self.lb_careers_list.GetSelection()
-        career_skills_dialog = EditSkillsDialog(self)
+        career_skills_dialog = EditSkillsDialog(self, self.user_character.career_track[
+            selected_career]['Career'].available_skills)
         for skill in self.user_character.career_track[selected_career]['Skills']:
             career_skills_dialog.lb_esd_skills_list.Append(skill)
         results = career_skills_dialog.ShowModal()

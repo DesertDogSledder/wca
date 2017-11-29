@@ -9,9 +9,9 @@ import wx.xrc
 ###########################################################################
 
 class EditSkillsDialog(wx.Dialog):
-    def __init__(self, parent):
+    def __init__(self, parent, available_skills=[]):
         wx.Dialog.__init__(self, parent, id=wx.ID_ANY, title=u"Edit Skills", pos=wx.DefaultPosition,
-                           size=wx.Size(428, 318), style=wx.DEFAULT_DIALOG_STYLE)
+                           size=wx.Size(604, 433), style=wx.DEFAULT_DIALOG_STYLE)
 
         self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
 
@@ -19,6 +19,16 @@ class EditSkillsDialog(wx.Dialog):
 
         self.p_esd_edit_skills = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL)
         bs_esd_1 = wx.BoxSizer(wx.VERTICAL)
+
+        sbs_esd_available_skills = wx.StaticBoxSizer(
+            wx.StaticBox(self.p_esd_edit_skills, wx.ID_ANY, u"Available Skills"), wx.VERTICAL)
+
+        self.tc_esd_available_skills = wx.TextCtrl(sbs_esd_available_skills.GetStaticBox(), wx.ID_ANY, wx.EmptyString,
+                                                   wx.DefaultPosition, wx.Size(-1, 100),
+                                                   wx.TE_MULTILINE | wx.TE_READONLY)
+        sbs_esd_available_skills.Add(self.tc_esd_available_skills, 0, wx.ALL | wx.EXPAND, 5)
+
+        bs_esd_1.Add(sbs_esd_available_skills, 1, wx.EXPAND, 5)
 
         bs_esd_skills = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -79,8 +89,21 @@ class EditSkillsDialog(wx.Dialog):
         self.b_esd_ok.Bind(wx.EVT_BUTTON, self.on_ok)
         self.b_esd_cancel.Bind(wx.EVT_BUTTON, self.on_cancel)
 
+        self.available_skills_str = ''
+        for skill in available_skills:
+            self.available_skills_str += '{}, '.format(skill)
+        self.tc_esd_available_skills.SetValue(self.available_skills_str[:-2])
+
     def __del__(self):
         pass
+
+    ##########################################
+    # Additional EditSkillsDialog init stuff #
+    ##########################################
+    # self.available_skills_str = ''
+    # for skill in available_skills:
+    #     self.available_skills_str += '{}, '.format(skill)
+    # self.tc_esd_available_skills.SetValue(self.available_skills_str[:-2])
 
     ##############################
     # EditSkillsDialog Functions #

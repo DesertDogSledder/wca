@@ -2,7 +2,13 @@
 
 import wx
 import wx.xrc
+import wx.lib.intctrl
 from data.careers import *
+try:
+    from data.custom import custom_careers
+    custom_careers_loaded = True
+except ImportError:
+    custom_careers_loaded = False
 
 
 ###########################################################################
@@ -62,6 +68,15 @@ class EditCareerDialog(wx.Dialog):
 
         bs_ecd_career_desc.Add(sbs_ecd_careers, 0, wx.EXPAND, 5)
 
+        sbs_ecd_career_desc = wx.StaticBoxSizer(wx.StaticBox(self.p_ecd_edit_career, wx.ID_ANY, u"Career Description"),
+                                                wx.VERTICAL)
+
+        self.tc_ecd_career_desc = wx.TextCtrl(sbs_ecd_career_desc.GetStaticBox(), wx.ID_ANY, wx.EmptyString,
+                                              wx.DefaultPosition, wx.Size(-1, 170), wx.TE_MULTILINE | wx.TE_READONLY)
+        sbs_ecd_career_desc.Add(self.tc_ecd_career_desc, 0, wx.ALL | wx.EXPAND, 5)
+
+        bs_ecd_career_desc.Add(sbs_ecd_career_desc, 1, wx.EXPAND, 5)
+
         bs_ecd_1.Add(bs_ecd_career_desc, 1, wx.EXPAND, 5)
 
         sbs_ecd_skills = wx.StaticBoxSizer(wx.StaticBox(self.p_ecd_edit_career, wx.ID_ANY, u"Available Skills"),
@@ -75,7 +90,7 @@ class EditCareerDialog(wx.Dialog):
 
         bs_ecd_1.Add(sbs_ecd_skills, 0, wx.EXPAND, 5)
 
-        bsb_ecd_exploits_desc = wx.BoxSizer(wx.HORIZONTAL)
+        bs_ecd_exploits_desc = wx.BoxSizer(wx.HORIZONTAL)
 
         sbs_ecd_exploit_names = wx.StaticBoxSizer(
             wx.StaticBox(self.p_ecd_edit_career, wx.ID_ANY, u"Available Exploits"), wx.VERTICAL)
@@ -87,10 +102,10 @@ class EditCareerDialog(wx.Dialog):
 
         sbs_ecd_exploit_names.Add(self.lb_ecd_exploit_list, 0, wx.ALL | wx.EXPAND, 5)
 
-        bsb_ecd_exploits_desc.Add(sbs_ecd_exploit_names, 1, wx.EXPAND, 5)
+        bs_ecd_exploits_desc.Add(sbs_ecd_exploit_names, 1, wx.EXPAND, 5)
 
-        sbs_ecd_exploit_desc = wx.StaticBoxSizer(wx.StaticBox(self.p_ecd_edit_career, wx.ID_ANY, u"Description"),
-                                                 wx.VERTICAL)
+        sbs_ecd_exploit_desc = wx.StaticBoxSizer(
+            wx.StaticBox(self.p_ecd_edit_career, wx.ID_ANY, u"Exploit Description"), wx.VERTICAL)
 
         self.tc_ecd_exploit_desc = wx.TextCtrl(sbs_ecd_exploit_desc.GetStaticBox(), wx.ID_ANY, wx.EmptyString,
                                                wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE | wx.TE_READONLY)
@@ -98,9 +113,9 @@ class EditCareerDialog(wx.Dialog):
 
         sbs_ecd_exploit_desc.Add(self.tc_ecd_exploit_desc, 0, wx.ALL | wx.EXPAND, 5)
 
-        bsb_ecd_exploits_desc.Add(sbs_ecd_exploit_desc, 2, wx.EXPAND, 5)
+        bs_ecd_exploits_desc.Add(sbs_ecd_exploit_desc, 2, wx.EXPAND, 5)
 
-        bs_ecd_1.Add(bsb_ecd_exploits_desc, 1, wx.EXPAND, 5)
+        bs_ecd_1.Add(bs_ecd_exploits_desc, 1, wx.EXPAND, 5)
 
         sbs_ecd_stats = wx.StaticBoxSizer(wx.StaticBox(self.p_ecd_edit_career, wx.ID_ANY, u"Stats"), wx.VERTICAL)
 
@@ -253,6 +268,9 @@ class EditCareerDialog(wx.Dialog):
 
         self.rb_ecd_origins.SetValue(True)
         self.show_careers(None)
+        if not custom_careers_loaded:
+            self.rb_ecd_custom.Enable(False)
+            self.rb_ecd_custom.Hide()
 
     def __del__(self):
         pass
@@ -262,6 +280,10 @@ class EditCareerDialog(wx.Dialog):
     ##########################################
     # self.rb_ecd_origins.SetValue(True)
     # self.show_careers(None)
+
+    # if not custom_careers_loaded:
+    #     self.rb_ecd_custom.Enable(False)
+    #     self.rb_ecd_custom.Hide()
 
     ##############################
     # EditCareerDialog Functions #
@@ -315,6 +337,8 @@ class EditCareerDialog(wx.Dialog):
     def on_career_select(self, event):
         career_list = self.get_career_list()
         selected_career = self.lb_ecd_career_list.GetSelection()
+
+        self.tc_ecd_career_desc.SetValue(career_list[selected_career].desc)
 
         self.lb_ecd_exploit_list.Clear()
 
