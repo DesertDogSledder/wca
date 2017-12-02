@@ -12,7 +12,7 @@ class SetDefenseSkillsDialog(wx.Dialog):
                            size=wx.Size(699, 161), style=wx.DEFAULT_DIALOG_STYLE)
 
         skills_dict = parent.user_character.calc_skill_total()
-        skills = []
+        skills = ['']
         for skill, value in skills_dict.items():
             skills.append(skill)
 

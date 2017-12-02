@@ -1383,12 +1383,41 @@ class WCA_Frame(wx.Frame):
 
     def set_defense_skills(self, event):
         set_defense_skills_dialog = SetDefenseSkillsDialog(self)
+        melee_index = set_defense_skills_dialog.c_sdsd_melee.FindString(
+            self.user_character.defense_skills['Melee'])
+        if melee_index != wx.NOT_FOUND:
+            set_defense_skills_dialog.c_sdsd_melee.SetSelection(melee_index)
+
+        ranged_index = set_defense_skills_dialog.c_sdsd_melee.FindString(
+            self.user_character.defense_skills['Ranged'])
+        if ranged_index != wx.NOT_FOUND:
+            set_defense_skills_dialog.c_sdsd_ranged.SetSelection(ranged_index)
+
+        mental_index = set_defense_skills_dialog.c_sdsd_melee.FindString(
+            self.user_character.defense_skills['Mental'])
+        if mental_index != wx.NOT_FOUND:
+            set_defense_skills_dialog.c_sdsd_mental.SetSelection(mental_index)
+
+        vital_index = set_defense_skills_dialog.c_sdsd_melee.FindString(
+            self.user_character.defense_skills['Vital'])
+        if vital_index != wx.NOT_FOUND:
+            set_defense_skills_dialog.c_sdsd_vital.SetSelection(vital_index)
+
         results = set_defense_skills_dialog.ShowModal()
+
         if results == wx.ID_OK:
-            self.user_character.defense_skills['Melee'] = set_defense_skills_dialog.c_sdsd_melee.GetSelection()
-            self.user_character.defense_skills['Ranged'] = set_defense_skills_dialog.c_sdsd_ranged.GetSelection()
-            self.user_character.defense_skills['Mental'] = set_defense_skills_dialog.c_sdsd_mental.GetSelection()
-            self.user_character.defense_skills['Vital'] = set_defense_skills_dialog.c_sdsd_vital.GetSelection()
+            melee_selection = set_defense_skills_dialog.c_sdsd_melee.GetSelection()
+            ranged_selection = set_defense_skills_dialog.c_sdsd_ranged.GetSelection()
+            mental_selection = set_defense_skills_dialog.c_sdsd_mental.GetSelection()
+            vital_selection = set_defense_skills_dialog.c_sdsd_vital.GetSelection()
+            self.user_character.defense_skills['Melee'] = set_defense_skills_dialog.c_sdsd_melee.GetString(
+                melee_selection)
+            self.user_character.defense_skills['Ranged'] = set_defense_skills_dialog.c_sdsd_ranged.GetString(
+                ranged_selection)
+            self.user_character.defense_skills['Mental'] = set_defense_skills_dialog.c_sdsd_mental.GetString(
+                mental_selection)
+            self.user_character.defense_skills['Vital'] = set_defense_skills_dialog.c_sdsd_vital.GetString(
+                vital_selection)
 
     ######################
     # Race tab functions #
