@@ -1280,7 +1280,7 @@ class WCA_Frame(wx.Frame):
         self.st_race_race_val.SetLabel(self.user_character.race['Race'].name)
         size_choices = ['tiny', 'small', 'medium', 'large', 'enormous', 'gigantic', 'colossal']
 
-        self.c_race_size.SetSelection(size_choices.index(self.user_character.race['Size']))
+        self.c_race_size.SetSelection(size_choices.index(self.user_character.race['Size'].lower()))
 
         selected_race_skills = ''
         for skill_pick in self.user_character.race['Skills']:
@@ -1439,6 +1439,7 @@ class WCA_Frame(wx.Frame):
     def set_race_size(self, event):
         size_selection = self.c_race_size.GetSelection()
         self.user_character.race['Size'] = self.c_race_size.GetString(size_selection).lower()
+        self.update_overview_tab(None)
 
     def edit_race_skills(self, event):
         race_skills_dialog = EditSkillsDialog(self, self.user_character.race['Race'].available_skills)
