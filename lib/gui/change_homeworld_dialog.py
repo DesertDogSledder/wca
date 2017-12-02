@@ -220,6 +220,10 @@ class ChangeHomeworldDialog(wx.Dialog):
         self.b_chd_ok.Bind(wx.EVT_BUTTON, self.on_ok)
         self.b_chd_cancel.Bind(wx.EVT_BUTTON, self.on_cancel)
 
+        if not custom_homeworlds_loaded:
+            self.rb_chd_custom.Enable(False)
+            self.rb_chd_custom.Hide()
+
     def __del__(self):
         pass
 

@@ -48,8 +48,8 @@ def calc_max_dice_pool_size(career_grade):
 class Character(object):
     def __init__(self, name='unnamed', strength=3, agility=3, endurance=3, willpower=3, intuition=3, logic=3,
                  charisma=3, luck=3, reputation=0, magic=0, chi=0, psionics=0, race=None,
-                 homeworld=None, hook='unset', career_track=None, notes='', race_skill_choices=None,
-                 homeworld_skill_choices=None, trait=None, misc_exploits=None, age_descriptor='unset'):
+                 homeworld=None, hook='unset', career_track=None, notes='', trait=None, misc_exploits=None,
+                 age_descriptor='unset', defense_skills=None):
         self.name = name
         self.stats = collections.OrderedDict(STR=strength,
                                              AGI=agility,
@@ -64,21 +64,7 @@ class Character(object):
                                              CHI=chi,
                                              PSI=psionics)
         self.race = copy.deepcopy(race)
-
-        if race_skill_choices is not None:
-            self.race_skill_choices = copy.deepcopy(race_skill_choices)
-            self.race_skill_choices.sort()
-        else:
-            self.race_skill_choices = []
-
         self.homeworld = copy.deepcopy(homeworld)
-
-        if homeworld_skill_choices is not None:
-            self.homeworld_skill_choices = copy.deepcopy(homeworld_skill_choices)
-            self.homeworld_skill_choices.sort()
-        else:
-            self.homeworld_skill_choices = []
-
         self.hook = hook
 
         if career_track is not None:
@@ -100,6 +86,11 @@ class Character(object):
         self.age_descriptor = age_descriptor
         self.notes = notes
 
+        if defense_skills is not None:
+            self.defense_skills = copy.deepcopy(defense_skills)
+        else:
+            self.defense_skills = {'Melee': '', 'Ranged': '', 'Mental': '', 'Vital': ''}
+
     def calc_stat_total(self):
         stat_total = copy.deepcopy(self.stats)
 
@@ -119,10 +110,10 @@ class Character(object):
         skill_list = []
         skill_total = collections.OrderedDict()
 
-        for skill in self.race_skill_choices:
+        for skill in self.race['Skills']:
             skill_list.append(skill)
 
-        for skill in self.homeworld_skill_choices:
+        for skill in self.homeworld['Skills']:
             skill_list.append(skill)
 
         for career in self.career_track:
@@ -142,11 +133,16 @@ class Character(object):
         stat_total = self.calc_stat_total()
         skill_total = self.calc_skill_total()
 
+        end_dice_pool = calc_dice_pool_size(stat_total['END'])
+        wil_dice_pool = calc_dice_pool_size(stat_total['WIL'])
+        str_dice_pool = calc_dice_pool_size(stat_total['STR'])
+        agi_dice_pool = calc_dice_pool_size(stat_total['AGI'])
+        cha_dice_pool = calc_dice_pool_size(stat_total['CHA'])
+        int_dice_pool = calc_dice_pool_size(stat_total['INT'])
+
         ##########
         # HEALTH #
         ##########
-        end_dice_pool = calc_dice_pool_size(stat_total['END'])
-        wil_dice_pool = calc_dice_pool_size(stat_total['WIL'])
         average_health = end_dice_pool + wil_dice_pool
         health_info = 'Roll END ({}d6) + WIL ({}d6)'.format(end_dice_pool, wil_dice_pool)
 
@@ -155,7 +151,7 @@ class Character(object):
             health_info += ' + hardy ({}d6)'.format(hardy_dice_pool)
             average_health += hardy_dice_pool
 
-        average_health *= 3.5
+        average_health = math.ceil(average_health * 3.5)
         if average_health >= 10:
             health_info += ' (average = {})'.format(average_health)
         else:
@@ -166,7 +162,7 @@ class Character(object):
         #########
         # SPEED #
         #########
-        base_speed = calc_dice_pool_size(stat_total['STR']) + calc_dice_pool_size(stat_total['AGI'])
+        base_speed = str_dice_pool + agi_dice_pool
         speed = base_speed
         if 'running' in skill_total:
             speed += calc_dice_pool_size(skill_total['running'])
@@ -195,8 +191,8 @@ class Character(object):
         low_g = math.ceil(low_g / 2)
 
         derived_stats['Speed'] = speed
-        derived_stats['Climbing'] = climbing
-        derived_stats['Swimming'] = swimming
+        derived_stats['Climb'] = climbing
+        derived_stats['Swim'] = swimming
         derived_stats['Zero-G'] = zero_g
         derived_stats['High-G'] = high_g
         derived_stats['Low-G'] = low_g
@@ -204,7 +200,8 @@ class Character(object):
         ########
         # JUMP #
         ########
-        derived_stats['Horizontal Jump'] = '{}\' (standing: {}\')'.format(stat_total['AGI']*2, stat_total['AGI'])
+        derived_stats['Horizontal Jump Running'] = stat_total['AGI']*2
+        derived_stats['Horizontal Jump Standing'] = stat_total['AGI']
         # Vertical jump values cannot exceed horizontal jump values
         if stat_total['STR'] <= stat_total['AGI']:
             vertical_jump_standing = stat_total['STR']
@@ -212,7 +209,8 @@ class Character(object):
         else:
             vertical_jump_standing = stat_total['AGI']
             vertical_jump_running = stat_total['AGI'] * 2
-        derived_stats['Vertical Jump'] = '{}\' (standing: {}\')'.format(vertical_jump_running, vertical_jump_standing)
+        derived_stats['Vertical Jump Running'] = vertical_jump_running
+        derived_stats['Vertical Jump Standing'] =vertical_jump_standing
 
         #########
         # CARRY #
@@ -222,7 +220,86 @@ class Character(object):
         else:
             base_carry = (stat_total['STR'] + stat_total['END']) * 10
 
-        derived_stats['Carry'] = '{} (before exploits and size modifiers)'.format(base_carry)
+        if self.race['Size'] == 'large':
+            base_carry = math.ceil(base_carry * 1.5)
+        elif self.race['Size'] == 'enormous':
+            base_carry *= 2
+        elif self.race['Size'] == 'gigantic':
+            base_carry *= 4
+        elif self.race['Size'] == 'colossal':
+            base_carry *= 8
+        elif self.race['Size'] == 'titanic':
+            base_carry *= 16
+
+        derived_stats['Carry'] = '{} (before exploits)'.format(base_carry)
+
+        ##############
+        # INITIATIVE #
+        ##############
+        if 'tactics' in skill_total:
+            tactics_dice_pool = calc_dice_pool_size(skill_total['tactics'])
+        else:
+            tactics_dice_pool = 0
+        if 'reactions' in skill_total:
+            reactions_dice_pool = calc_dice_pool_size(skill_total['reactions'])
+        else:
+            reactions_dice_pool = 0
+
+        derived_stats['Initiative'] = int_dice_pool + max([tactics_dice_pool, reactions_dice_pool])
+
+        ############
+        # DEFENSES #
+        ############
+        derived_stats['Melee Defense'] = max([str_dice_pool, agi_dice_pool])
+        derived_stats['Ranged Defense'] = agi_dice_pool
+        derived_stats['Mental Defense'] = max([cha_dice_pool, wil_dice_pool])
+        derived_stats['Vital Defense'] = end_dice_pool
+
+        if self.defense_skills['Melee'] != '' and self.defense_skills['Melee'] in skill_total:
+            derived_stats['Melee Defense'] += calc_dice_pool_size(skill_total[self.defense_skills['Melee']])
+        if self.defense_skills['Ranged'] != '' and self.defense_skills['Ranged'] in skill_total:
+            derived_stats['Ranged Defense'] += calc_dice_pool_size(skill_total[self.defense_skills['Ranged']])
+        if self.defense_skills['Mental'] != '' and self.defense_skills['Mental'] in skill_total:
+            derived_stats['Mental Defense'] += calc_dice_pool_size(skill_total[self.defense_skills['Mental']])
+        if self.defense_skills['Vital'] != '' and self.defense_skills['Vital'] in skill_total:
+            derived_stats['Vital Defense'] += calc_dice_pool_size(skill_total[self.defense_skills['Vital']])
+
+        derived_stats['Melee Defense'] = math.ceil(derived_stats['Melee Defense'] * 3.5)
+        derived_stats['Ranged Defense'] = math.ceil(derived_stats['Ranged Defense'] * 3.5)
+        derived_stats['Mental Defense'] = math.ceil(derived_stats['Mental Defense'] * 3.5)
+        derived_stats['Vital Defense'] = math.ceil(derived_stats['Vital Defense'] * 3.5)
+
+        if self.race['Size'] == 'tiny':
+            derived_stats['Melee Defense'] += 4
+            derived_stats['Ranged Defense'] += 4
+        elif self.race['Size'] == 'small':
+            derived_stats['Melee Defense'] += 2
+            derived_stats['Ranged Defense'] += 2
+        elif self.race['Size'] == 'large':
+            derived_stats['Melee Defense'] -= 4
+            derived_stats['Ranged Defense'] -= 4
+        elif self.race['Size'] == 'enormous':
+            derived_stats['Melee Defense'] -= 8
+            derived_stats['Ranged Defense'] -= 8
+        elif self.race['Size'] == 'gigantic':
+            derived_stats['Melee Defense'] -= 16
+            derived_stats['Ranged Defense'] -= 16
+        elif self.race['Size'] == 'colossal':
+            derived_stats['Melee Defense'] -= 32
+            derived_stats['Ranged Defense'] -= 32
+        elif self.race['Size'] == 'titantic':
+            # extrapolation based on previous trends
+            derived_stats['Melee Defense'] -= 64
+            derived_stats['Ranged Defense'] -= 64
+
+        if derived_stats['Melee Defense'] < 10:
+            derived_stats['Melee Defense'] = 10
+        if derived_stats['Ranged Defense'] < 10:
+            derived_stats['Ranged Defense'] = 10
+        if derived_stats['Mental Defense'] < 10:
+            derived_stats['Mental Defense'] = 10
+        if derived_stats['Vital Defense'] < 10:
+            derived_stats['Vital Defense'] = 10
 
         return derived_stats
 

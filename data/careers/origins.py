@@ -7,7 +7,7 @@ career_woin_origin_acoloyte = Career(
     career_time_unit='years',
     prereq='none',
     intuition=1, willpower=1, charisma=1, luck=1,
-    available_skills=['[artistic]', '[magical]', 'herbalism', 'intuition', 'linguistics', 'mediation', 'medicine',
+    available_skills=['[artistic]', '[magical]', 'herbalism', 'intuition', 'linguistics', 'meditation', 'medicine',
                       'religion'],
     desc="A childhood spent in a monastery taught you well for a life of piety.",
     available_exploits=[{'Name': '''Daily Worship''',

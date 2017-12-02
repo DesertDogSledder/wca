@@ -10,6 +10,7 @@ from lib.gui.change_race_dialog import ChangeRaceDialog
 from lib.gui.edit_career_dialog import EditCareerDialog
 from lib.gui.edit_skills_dialog import EditSkillsDialog
 from lib.gui.set_trait_dialog import SetTraitDialog
+from lib.gui.set_defense_skills_dialog import SetDefenseSkillsDialog
 from data.races import *
 from data.homeworlds import *
 
@@ -21,7 +22,7 @@ from data.homeworlds import *
 class WCA_Frame(wx.Frame):
     def __init__(self, parent):
         wx.Frame.__init__(self, parent, id=wx.ID_ANY, title=u"WOIN Character Assistant", pos=wx.DefaultPosition,
-                          size=wx.Size(686, 684), style=wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
+                          size=wx.Size(660, 760), style=wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
 
         self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
 
@@ -35,7 +36,6 @@ class WCA_Frame(wx.Frame):
 
         self.mi_file_save = wx.MenuItem(self.m_file, wx.ID_ANY, u"Save", wx.EmptyString, wx.ITEM_NORMAL)
         self.m_file.Append(self.mi_file_save)
-        self.mi_file_save.Enable(False)
 
         self.mi_file_save_as = wx.MenuItem(self.m_file, wx.ID_ANY, u"Save As...", wx.EmptyString, wx.ITEM_NORMAL)
         self.m_file.Append(self.mi_file_save_as)
@@ -134,19 +134,206 @@ class WCA_Frame(wx.Frame):
 
         sbs_overview_exploits.Add(self.tc_overview_exploits, 0, wx.ALL | wx.EXPAND, 5)
 
-        bs_overview_main.Add(sbs_overview_exploits, 2, wx.EXPAND, 5)
+        bs_overview_main.Add(sbs_overview_exploits, 0, wx.EXPAND, 5)
 
         sbs_overview_derived_stats = wx.StaticBoxSizer(wx.StaticBox(self.p_overview, wx.ID_ANY, u"Derived Stats"),
                                                        wx.VERTICAL)
 
-        self.tc_overview_derived_stats = wx.TextCtrl(sbs_overview_derived_stats.GetStaticBox(), wx.ID_ANY,
-                                                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,
-                                                     wx.TE_MULTILINE | wx.TE_READONLY)
-        self.tc_overview_derived_stats.SetMinSize(wx.Size(-1, 100))
+        fgs_overview_derived_stats = wx.FlexGridSizer(0, 2, 0, 0)
+        fgs_overview_derived_stats.AddGrowableCol(0)
+        fgs_overview_derived_stats.AddGrowableCol(1)
+        fgs_overview_derived_stats.SetFlexibleDirection(wx.VERTICAL)
+        fgs_overview_derived_stats.SetNonFlexibleGrowMode(wx.FLEX_GROWMODE_ALL)
 
-        sbs_overview_derived_stats.Add(self.tc_overview_derived_stats, 0, wx.ALL | wx.EXPAND, 5)
+        sbs_overview_ds_health = wx.StaticBoxSizer(
+            wx.StaticBox(sbs_overview_derived_stats.GetStaticBox(), wx.ID_ANY, u"Health"), wx.VERTICAL)
 
-        bs_overview_main.Add(sbs_overview_derived_stats, 1, wx.EXPAND, 5)
+        self.st_overview_ds_health_val = wx.StaticText(sbs_overview_ds_health.GetStaticBox(), wx.ID_ANY, u"ds_health",
+                                                       wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_health_val.Wrap(-1)
+        sbs_overview_ds_health.Add(self.st_overview_ds_health_val, 0, wx.ALL, 5)
+
+        fgs_overview_derived_stats.Add(sbs_overview_ds_health, 1, wx.EXPAND, 5)
+
+        sbs_overview_ds_intiative = wx.StaticBoxSizer(
+            wx.StaticBox(sbs_overview_derived_stats.GetStaticBox(), wx.ID_ANY, u"Initiative"), wx.VERTICAL)
+
+        self.st_overview_ds_initiative_val = wx.StaticText(sbs_overview_ds_intiative.GetStaticBox(), wx.ID_ANY,
+                                                           u"ds_init", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_initiative_val.Wrap(-1)
+        sbs_overview_ds_intiative.Add(self.st_overview_ds_initiative_val, 0, wx.ALL, 5)
+
+        fgs_overview_derived_stats.Add(sbs_overview_ds_intiative, 1, wx.EXPAND, 5)
+
+        sbs_overview_ds_movement = wx.StaticBoxSizer(
+            wx.StaticBox(sbs_overview_derived_stats.GetStaticBox(), wx.ID_ANY, u"Movement"), wx.VERTICAL)
+
+        bs_overview_ds_movement = wx.BoxSizer(wx.HORIZONTAL)
+
+        fgs_overview_ds_movement_1 = wx.FlexGridSizer(0, 2, 0, 0)
+        fgs_overview_ds_movement_1.SetFlexibleDirection(wx.BOTH)
+        fgs_overview_ds_movement_1.SetNonFlexibleGrowMode(wx.FLEX_GROWMODE_NONE)
+
+        self.st_overview_ds_speed = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY, u"Speed",
+                                                  wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_speed.Wrap(-1)
+        fgs_overview_ds_movement_1.Add(self.st_overview_ds_speed, 0, wx.ALL, 5)
+
+        self.st_overview_ds_speed_val = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY, u"speed_val",
+                                                      wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_speed_val.Wrap(-1)
+        fgs_overview_ds_movement_1.Add(self.st_overview_ds_speed_val, 0, wx.ALL, 5)
+
+        self.st_overview_ds_climb = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY, u"Climb",
+                                                  wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_climb.Wrap(-1)
+        fgs_overview_ds_movement_1.Add(self.st_overview_ds_climb, 0, wx.ALL, 5)
+
+        self.st_overview_ds_climb_val = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY, u"climb_val",
+                                                      wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_climb_val.Wrap(-1)
+        fgs_overview_ds_movement_1.Add(self.st_overview_ds_climb_val, 0, wx.ALL, 5)
+
+        self.st_overview_ds_swim = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY, u"Swim",
+                                                 wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_swim.Wrap(-1)
+        fgs_overview_ds_movement_1.Add(self.st_overview_ds_swim, 0, wx.ALL, 5)
+
+        self.st_overview_ds_swim_val = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY, u"swim_val",
+                                                     wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_swim_val.Wrap(-1)
+        fgs_overview_ds_movement_1.Add(self.st_overview_ds_swim_val, 0, wx.ALL, 5)
+
+        self.st_overview_ds_vertical_jump = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY,
+                                                          u"Vertical Jump", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_vertical_jump.Wrap(-1)
+        fgs_overview_ds_movement_1.Add(self.st_overview_ds_vertical_jump, 0, wx.ALL, 5)
+
+        self.st_overview_ds_vertical_jump_val = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY,
+                                                              u"v_jump_val", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_vertical_jump_val.Wrap(-1)
+        fgs_overview_ds_movement_1.Add(self.st_overview_ds_vertical_jump_val, 0, wx.ALL, 5)
+
+        self.st_overview_ds_carry = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY, u"Carry",
+                                                  wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_carry.Wrap(-1)
+        fgs_overview_ds_movement_1.Add(self.st_overview_ds_carry, 0, wx.ALL, 5)
+
+        self.st_overview_ds_carry_val = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY, u"carry_val",
+                                                      wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_carry_val.Wrap(-1)
+        fgs_overview_ds_movement_1.Add(self.st_overview_ds_carry_val, 0, wx.ALL, 5)
+
+        bs_overview_ds_movement.Add(fgs_overview_ds_movement_1, 1, wx.EXPAND, 5)
+
+        fgs_overview_ds_movement_2 = wx.FlexGridSizer(0, 2, 0, 0)
+        fgs_overview_ds_movement_2.SetFlexibleDirection(wx.BOTH)
+        fgs_overview_ds_movement_2.SetNonFlexibleGrowMode(wx.FLEX_GROWMODE_NONE)
+
+        self.st_overview_ds_zero_g = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY, u"Zero-G",
+                                                   wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_zero_g.Wrap(-1)
+        fgs_overview_ds_movement_2.Add(self.st_overview_ds_zero_g, 0, wx.ALL, 5)
+
+        self.st_overview_ds_zero_g_val = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY,
+                                                       u"zero_g_val", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_zero_g_val.Wrap(-1)
+        fgs_overview_ds_movement_2.Add(self.st_overview_ds_zero_g_val, 0, wx.ALL, 5)
+
+        self.st_overview_ds_low_g = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY, u"Low-G",
+                                                  wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_low_g.Wrap(-1)
+        fgs_overview_ds_movement_2.Add(self.st_overview_ds_low_g, 0, wx.ALL, 5)
+
+        self.st_overview_ds_low_g_val = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY, u"low_g_val",
+                                                      wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_low_g_val.Wrap(-1)
+        fgs_overview_ds_movement_2.Add(self.st_overview_ds_low_g_val, 0, wx.ALL, 5)
+
+        self.st_overview_ds_high_g = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY, u"High-G",
+                                                   wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_high_g.Wrap(-1)
+        fgs_overview_ds_movement_2.Add(self.st_overview_ds_high_g, 0, wx.ALL, 5)
+
+        self.st_overview_ds_high_g_val = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY,
+                                                       u"high_g_val", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_high_g_val.Wrap(-1)
+        fgs_overview_ds_movement_2.Add(self.st_overview_ds_high_g_val, 0, wx.ALL, 5)
+
+        self.st_overview_ds_horizonal_jump = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY,
+                                                           u"Horizontal Jump", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_horizonal_jump.Wrap(-1)
+        fgs_overview_ds_movement_2.Add(self.st_overview_ds_horizonal_jump, 0, wx.ALL, 5)
+
+        self.st_overview_ds_horizontal_jump_val = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY,
+                                                                u"h_jump_val", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_horizontal_jump_val.Wrap(-1)
+        fgs_overview_ds_movement_2.Add(self.st_overview_ds_horizontal_jump_val, 0, wx.ALL, 5)
+
+        bs_overview_ds_movement.Add(fgs_overview_ds_movement_2, 1, wx.EXPAND, 5)
+
+        sbs_overview_ds_movement.Add(bs_overview_ds_movement, 1, wx.EXPAND, 5)
+
+        fgs_overview_derived_stats.Add(sbs_overview_ds_movement, 1, wx.EXPAND, 5)
+
+        sbs_overview_ds_defense = wx.StaticBoxSizer(
+            wx.StaticBox(sbs_overview_derived_stats.GetStaticBox(), wx.ID_ANY, u"Defense"), wx.HORIZONTAL)
+
+        fgs_overview_ds_defense_1 = wx.FlexGridSizer(0, 2, 0, 0)
+        fgs_overview_ds_defense_1.SetFlexibleDirection(wx.BOTH)
+        fgs_overview_ds_defense_1.SetNonFlexibleGrowMode(wx.FLEX_GROWMODE_SPECIFIED)
+
+        self.st_overview_ds_defense_melee = wx.StaticText(sbs_overview_ds_defense.GetStaticBox(), wx.ID_ANY, u"Melee",
+                                                          wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_defense_melee.Wrap(-1)
+        fgs_overview_ds_defense_1.Add(self.st_overview_ds_defense_melee, 0, wx.ALL, 5)
+
+        self.st_overview_ds_defense_melee_val = wx.StaticText(sbs_overview_ds_defense.GetStaticBox(), wx.ID_ANY,
+                                                              u"melee_val", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_defense_melee_val.Wrap(-1)
+        fgs_overview_ds_defense_1.Add(self.st_overview_ds_defense_melee_val, 0, wx.ALL, 5)
+
+        self.st_overview_ds_defense_ranged = wx.StaticText(sbs_overview_ds_defense.GetStaticBox(), wx.ID_ANY, u"Ranged",
+                                                           wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_defense_ranged.Wrap(-1)
+        fgs_overview_ds_defense_1.Add(self.st_overview_ds_defense_ranged, 0, wx.ALL, 5)
+
+        self.st_overview_ds_defense_ranged_val = wx.StaticText(sbs_overview_ds_defense.GetStaticBox(), wx.ID_ANY,
+                                                               u"ranged_val", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_defense_ranged_val.Wrap(-1)
+        fgs_overview_ds_defense_1.Add(self.st_overview_ds_defense_ranged_val, 0, wx.ALL, 5)
+
+        self.st_overview_ds_defense_mental = wx.StaticText(sbs_overview_ds_defense.GetStaticBox(), wx.ID_ANY, u"Mental",
+                                                           wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_defense_mental.Wrap(-1)
+        fgs_overview_ds_defense_1.Add(self.st_overview_ds_defense_mental, 0, wx.ALL, 5)
+
+        self.st_overview_ds_defense_mental_val = wx.StaticText(sbs_overview_ds_defense.GetStaticBox(), wx.ID_ANY,
+                                                               u"mental_val", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_defense_mental_val.Wrap(-1)
+        fgs_overview_ds_defense_1.Add(self.st_overview_ds_defense_mental_val, 0, wx.ALL, 5)
+
+        self.st_overview_ds_defense_vital = wx.StaticText(sbs_overview_ds_defense.GetStaticBox(), wx.ID_ANY, u"Vital",
+                                                          wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_defense_vital.Wrap(-1)
+        fgs_overview_ds_defense_1.Add(self.st_overview_ds_defense_vital, 0, wx.ALL, 5)
+
+        self.st_overview_ds_defense_vital_val = wx.StaticText(sbs_overview_ds_defense.GetStaticBox(), wx.ID_ANY,
+                                                              u"vital_val", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_overview_ds_defense_vital_val.Wrap(-1)
+        fgs_overview_ds_defense_1.Add(self.st_overview_ds_defense_vital_val, 0, wx.ALL, 5)
+
+        sbs_overview_ds_defense.Add(fgs_overview_ds_defense_1, 1, wx.EXPAND, 5)
+
+        self.b_overview_ds_set_def_skills = wx.Button(sbs_overview_ds_defense.GetStaticBox(), wx.ID_ANY,
+                                                      u"Set Defense Skills", wx.DefaultPosition, wx.DefaultSize, 0)
+        sbs_overview_ds_defense.Add(self.b_overview_ds_set_def_skills, 0, wx.ALL, 5)
+
+        fgs_overview_derived_stats.Add(sbs_overview_ds_defense, 1, wx.EXPAND, 5)
+
+        sbs_overview_derived_stats.Add(fgs_overview_derived_stats, 1, wx.EXPAND, 5)
+
+        bs_overview_main.Add(sbs_overview_derived_stats, 0, wx.EXPAND, 5)
 
         sbs_overview_stats = wx.StaticBoxSizer(wx.StaticBox(self.p_overview, wx.ID_ANY, u"Total Stats"), wx.VERTICAL)
 
@@ -283,6 +470,8 @@ class WCA_Frame(wx.Frame):
         self.p_race = wx.Panel(self.nb_main, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL)
         bs_race = wx.BoxSizer(wx.VERTICAL)
 
+        bs_race_race_size = wx.BoxSizer(wx.HORIZONTAL)
+
         sbs_race_race = wx.StaticBoxSizer(wx.StaticBox(self.p_race, wx.ID_ANY, u"Race"), wx.VERTICAL)
 
         self.st_race_race_val = wx.StaticText(sbs_race_race.GetStaticBox(), wx.ID_ANY, u"char_race", wx.DefaultPosition,
@@ -294,7 +483,19 @@ class WCA_Frame(wx.Frame):
                                      wx.DefaultSize, 0)
         sbs_race_race.Add(self.b_race_edit, 0, wx.ALL, 5)
 
-        bs_race.Add(sbs_race_race, 0, wx.EXPAND, 5)
+        bs_race_race_size.Add(sbs_race_race, 1, wx.EXPAND, 5)
+
+        sbs_race_size = wx.StaticBoxSizer(wx.StaticBox(self.p_race, wx.ID_ANY, u"Size"), wx.VERTICAL)
+
+        c_race_sizeChoices = [u"Tiny", u"Small", u"Medium", u"Large", u"Enormous", u"Gigantic", u"Colossal", u"Titanic"]
+        self.c_race_size = wx.Choice(sbs_race_size.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
+                                     c_race_sizeChoices, 0)
+        self.c_race_size.SetSelection(2)
+        sbs_race_size.Add(self.c_race_size, 0, wx.ALL, 5)
+
+        bs_race_race_size.Add(sbs_race_size, 1, wx.EXPAND, 5)
+
+        bs_race.Add(bs_race_race_size, 0, wx.EXPAND, 5)
 
         sbs_race_skills = wx.StaticBoxSizer(wx.StaticBox(self.p_race, wx.ID_ANY, u"Selected Skills"), wx.VERTICAL)
 
@@ -888,12 +1089,13 @@ class WCA_Frame(wx.Frame):
         # Connect Events
         self.Bind(wx.EVT_MENU, self.new_character, id=self.mi_file_new.GetId())
         self.Bind(wx.EVT_MENU, self.open_file, id=self.mi_file_open.GetId())
-        self.Bind(wx.EVT_MENU, self.save_as_file, id=self.mi_file_save.GetId())
         self.Bind(wx.EVT_MENU, self.save_as_file, id=self.mi_file_save_as.GetId())
         self.Bind(wx.EVT_MENU, self.quit_wca, id=self.mi_file_quit.GetId())
         self.tc_overview_name_val.Bind(wx.EVT_TEXT, self.set_character_name)
         self.b_overview_change_trait.Bind(wx.EVT_BUTTON, self.change_trait)
+        self.b_overview_ds_set_def_skills.Bind(wx.EVT_BUTTON, self.set_defense_skills)
         self.b_race_edit.Bind(wx.EVT_BUTTON, self.change_race)
+        self.c_race_size.Bind(wx.EVT_CHOICE, self.set_race_size)
         self.b_race_skills_edit.Bind(wx.EVT_BUTTON, self.edit_race_skills)
         self.lb_race_exploits_list.Bind(wx.EVT_LISTBOX, self.show_race_exploit_desc)
         self.b_homeworld_edit.Bind(wx.EVT_BUTTON, self.change_homeworld)
@@ -911,6 +1113,7 @@ class WCA_Frame(wx.Frame):
         self.b_exploits_remove.Bind(wx.EVT_BUTTON, self.remove_misc_exploit)
 
         self.nb_main.Hide()
+        self.character_not_saved = False
 
     def __del__(self):
         pass
@@ -928,12 +1131,20 @@ class WCA_Frame(wx.Frame):
     # Menu functions #
     ##################
     def new_character(self, event):
+        if self.character_not_saved:
+            if wx.MessageBox("Current character has not been saved! Continue?", "Unsaved changes",
+                             wx.ICON_QUESTION | wx.YES_NO, self) == wx.NO:
+                return
+
         self.nb_main.Show()
         self.user_character = character.Character(race={'Race': copy.deepcopy(races_new.race_new_human),
                                                         'Source': 'new',
+                                                        'Skills': [],
+                                                        'Size': 'medium',
                                                         'Stats': copy.deepcopy(races_new.race_new_human.stats)},
                                                   homeworld={'Homeworld': copy.deepcopy(homeworlds_new.homeworld_none),
-                                                             'Source': 'new'},
+                                                             'Source': 'new',
+                                                             'Skills': []},
                                                   age_descriptor='young')
         self.mi_file_save.Enable(True)
         self.mi_file_save_as.Enable(True)
@@ -947,11 +1158,13 @@ class WCA_Frame(wx.Frame):
         self.on_career_select(None)
         self.on_misc_exploit_select(None)
 
+        self.character_not_saved = False
+
     def open_file(self, event):
-        # if self.character_not_saved:
-        #     if wx.MessageBox("Current character has not been saved! Proceed?", "Please confirm",
-        #                      wx.ICON_QUESTION | wx.YES_NO, self) == wx.NO:
-        #         return
+        if self.character_not_saved:
+            if wx.MessageBox("Current character has not been saved! Continue?", "Unsaved changes",
+                             wx.ICON_QUESTION | wx.YES_NO, self) == wx.NO:
+                return
 
         # otherwise ask the user what new file to open
         with wx.FileDialog(self, "Open Character file", wildcard="WCA files (*.wca)|*.wca",
@@ -978,6 +1191,7 @@ class WCA_Frame(wx.Frame):
         self.update_exploits_tab(None)
         self.on_career_select(None)
         self.on_misc_exploit_select(None)
+        self.character_not_saved = False
 
     def save_as_file(self, event):
         with wx.FileDialog(self, "Save WCA file", wildcard="WCA files (*.wca)|*.wca",
@@ -991,10 +1205,15 @@ class WCA_Frame(wx.Frame):
             try:
                 with open(pathname, 'wb') as file:
                     pickle.dump(self.user_character, file, pickle.HIGHEST_PROTOCOL)
+                self.character_not_saved = False
             except IOError:
                 wx.LogError("Cannot save current data in file '{}}'.".format(pathname))
 
     def quit_wca(self, event):
+        if self.character_not_saved:
+            if wx.MessageBox("Current character has not been saved! Are you sure you want to quit?", "Unsaved changes",
+                             wx.ICON_QUESTION | wx.YES_NO, self) == wx.NO:
+                return
         self.Close()
 
     #########################
@@ -1028,23 +1247,43 @@ class WCA_Frame(wx.Frame):
         self.st_total_psi_val.SetLabel(str(total_stats['PSI']))
 
         all_exploits_str = ''
-        #print(self.user_character.get_all_exploits())
         for exploit in self.user_character.get_all_exploits():
             all_exploits_str += '{} - {}\n\n'.format(exploit['Name'], exploit['Desc'])
 
         self.tc_overview_exploits.SetValue(all_exploits_str)
 
-        derived_stats_str = ''
-        for key, value in self.user_character.calc_derived_stats().items():
-            derived_stats_str += '{} - {}\n'.format(key, value)
+        derived_stats = self.user_character.calc_derived_stats()
 
-        self.tc_overview_derived_stats.SetValue(derived_stats_str)
+        self.st_overview_ds_health_val.SetLabel(derived_stats['Health'])
+        self.st_overview_ds_initiative_val.SetLabel(str(derived_stats['Initiative']))
+
+        self.st_overview_ds_speed_val.SetLabel(str(derived_stats['Speed']))
+        self.st_overview_ds_climb_val.SetLabel(str(derived_stats['Climb']))
+        self.st_overview_ds_swim_val.SetLabel(str(derived_stats['Swim']))
+        self.st_overview_ds_zero_g_val.SetLabel(str(derived_stats['Zero-G']))
+        self.st_overview_ds_low_g_val.SetLabel(str(derived_stats['Low-G']))
+        self.st_overview_ds_high_g_val.SetLabel(str(derived_stats['High-G']))
+        self.st_overview_ds_carry_val.SetLabel(str(derived_stats['Carry']))
+        self.st_overview_ds_vertical_jump_val.SetLabel('{}\'/{}\''.format(derived_stats['Vertical Jump Running'],
+                                                                          derived_stats['Vertical Jump Standing']))
+        self.st_overview_ds_horizontal_jump_val.SetLabel('{}\'/{}\''.format(derived_stats['Horizontal Jump Running'],
+                                                                            derived_stats['Horizontal Jump Standing']))
+
+        self.st_overview_ds_defense_melee_val.SetLabel(str(derived_stats['Melee Defense']))
+        self.st_overview_ds_defense_ranged_val.SetLabel(str(derived_stats['Ranged Defense']))
+        self.st_overview_ds_defense_mental_val.SetLabel(str(derived_stats['Mental Defense']))
+        self.st_overview_ds_defense_vital_val.SetLabel(str(derived_stats['Vital Defense']))
+
+        self.character_not_saved = True
 
     def update_race_tab(self, event):
         self.st_race_race_val.SetLabel(self.user_character.race['Race'].name)
+        size_choices = ['tiny', 'small', 'medium', 'large', 'enormous', 'gigantic', 'colossal']
+
+        self.c_race_size.SetSelection(size_choices.index(self.user_character.race['Size']))
 
         selected_race_skills = ''
-        for skill_pick in self.user_character.race_skill_choices:
+        for skill_pick in self.user_character.race['Skills']:
             selected_race_skills += '{}, '.format(skill_pick)
         selected_race_skills = selected_race_skills[:-2]
         if selected_race_skills == '':
@@ -1073,7 +1312,7 @@ class WCA_Frame(wx.Frame):
         self.st_homeworld_homeworld_val.SetLabel(self.user_character.homeworld['Homeworld'].name)
 
         selected_homeworld_skills = ''
-        for skill_pick in self.user_character.homeworld_skill_choices:
+        for skill_pick in self.user_character.homeworld['Skills']:
             selected_homeworld_skills += '{}, '.format(skill_pick)
             selected_homeworld_skills = selected_homeworld_skills[:-2]
 
@@ -1124,6 +1363,7 @@ class WCA_Frame(wx.Frame):
     ##########################
     def set_character_name(self, event):
         self.user_character.name = event.GetString()
+        self.character_not_saved = True
 
     def change_trait(self, event):
         set_trait_dialog = SetTraitDialog(self)
@@ -1140,6 +1380,15 @@ class WCA_Frame(wx.Frame):
             selected_trait = set_trait_dialog.lb_std_exploit_list.GetSelection()
             self.user_character.trait = copy.deepcopy(set_trait_dialog.trait_list[selected_trait])
             self.update_overview_tab(None)
+
+    def set_defense_skills(self, event):
+        set_defense_skills_dialog = SetDefenseSkillsDialog(self)
+        results = set_defense_skills_dialog.ShowModal()
+        if results == wx.ID_OK:
+            self.user_character.defense_skills['Melee'] = set_defense_skills_dialog.c_sdsd_melee.GetSelection()
+            self.user_character.defense_skills['Ranged'] = set_defense_skills_dialog.c_sdsd_ranged.GetSelection()
+            self.user_character.defense_skills['Mental'] = set_defense_skills_dialog.c_sdsd_mental.GetSelection()
+            self.user_character.defense_skills['Vital'] = set_defense_skills_dialog.c_sdsd_vital.GetSelection()
 
     ######################
     # Race tab functions #
@@ -1181,17 +1430,23 @@ class WCA_Frame(wx.Frame):
                                                                          MAG=race_dialog.ic_crd_mag.GetValue(),
                                                                          CHI=race_dialog.ic_crd_chi.GetValue(),
                                                                          PSI=race_dialog.ic_crd_psi.GetValue()),
+                                        'Skills': [],
+                                        'Size': 'Medium',
                                         'Source': race_dialog.get_list_source()}
             self.update_race_tab(None)
             self.update_overview_tab(None)
 
+    def set_race_size(self, event):
+        size_selection = self.c_race_size.GetSelection()
+        self.user_character.race['Size'] = self.c_race_size.GetString(size_selection).lower()
+
     def edit_race_skills(self, event):
         race_skills_dialog = EditSkillsDialog(self, self.user_character.race['Race'].available_skills)
-        for skill in self.user_character.race_skill_choices:
+        for skill in self.user_character.race['Skills']:
             race_skills_dialog.lb_esd_skills_list.Append(skill)
         results = race_skills_dialog.ShowModal()
         if results == wx.ID_OK:
-            self.user_character.race_skill_choices = copy.deepcopy(race_skills_dialog.lb_esd_skills_list.GetItems())
+            self.user_character.race['Skills'] = copy.deepcopy(race_skills_dialog.lb_esd_skills_list.GetItems())
             self.update_race_tab(None)
             self.update_overview_tab(None)
 
@@ -1225,17 +1480,18 @@ class WCA_Frame(wx.Frame):
             homeworld_list = homeworld_dialog.get_homeworld_list()
             self.user_character.homeworld = {'Homeworld': copy.deepcopy(
                 homeworld_list[homeworld_dialog.lb_chd_homeworld_list.GetSelection()]),
+                                             'Skills': [],
                                              'Source': homeworld_dialog.get_list_source()}
             self.update_homeworld_tab(None)
             self.update_overview_tab(None)
 
     def edit_homeworld_skills(self, event):
         homeworld_skills_dialog = EditSkillsDialog(self, self.user_character.homeworld['Homeworld'].available_skills)
-        for skill in self.user_character.homeworld_skill_choices:
+        for skill in self.user_character.homeworld['Skills']:
             homeworld_skills_dialog.lb_esd_skills_list.Append(skill)
         results = homeworld_skills_dialog.ShowModal()
         if results == wx.ID_OK:
-            self.user_character.homeworld_skill_choices = copy.deepcopy(
+            self.user_character.homeworld['Skills'] = copy.deepcopy(
                 homeworld_skills_dialog.lb_esd_skills_list.GetItems())
             self.update_homeworld_tab(None)
             self.update_overview_tab(None)
@@ -1271,7 +1527,6 @@ class WCA_Frame(wx.Frame):
                  'Skills': [],
                  'Exploit': {'Name': 'unset career exploit', 'Desc': 'unset', 'Source': 'unset'},
                  'Notes': ''})
-
 
             # Update page
             self.update_career_tab(None)
