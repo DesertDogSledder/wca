@@ -1233,18 +1233,30 @@ class WCA_Frame(wx.Frame):
             skill_total_str += '{} - {} ({}d6)\n'.format(skill, value, character.calc_dice_pool_size(value))
         self.tc_overview_skills.SetValue(skill_total_str)
 
-        self.st_total_str_val.SetLabel(str(total_stats['STR']))
-        self.st_total_agi_val.SetLabel(str(total_stats['AGI']))
-        self.st_total_end_val.SetLabel(str(total_stats['END']))
-        self.st_total_int_val.SetLabel(str(total_stats['INT']))
-        self.st_total_log_val.SetLabel(str(total_stats['LOG']))
-        self.st_total_wil_val.SetLabel(str(total_stats['WIL']))
-        self.st_total_cha_val.SetLabel(str(total_stats['CHA']))
-        self.st_total_luc_val.SetLabel(str(total_stats['LUC']))
-        self.st_total_rep_val.SetLabel(str(total_stats['REP']))
-        self.st_total_mag_val.SetLabel(str(total_stats['MAG']))
-        self.st_total_chi_val.SetLabel(str(total_stats['CHI']))
-        self.st_total_psi_val.SetLabel(str(total_stats['PSI']))
+        self.st_total_str_val.SetLabel('{} ({}d6)'.format(total_stats['STR'],
+                                                          character.calc_dice_pool_size(total_stats['STR'])))
+        self.st_total_agi_val.SetLabel('{} ({}d6)'.format(total_stats['AGI'],
+                                                          character.calc_dice_pool_size(total_stats['AGI'])))
+        self.st_total_end_val.SetLabel('{} ({}d6)'.format(total_stats['END'],
+                                                          character.calc_dice_pool_size(total_stats['END'])))
+        self.st_total_int_val.SetLabel('{} ({}d6)'.format(total_stats['INT'],
+                                                          character.calc_dice_pool_size(total_stats['INT'])))
+        self.st_total_log_val.SetLabel('{} ({}d6)'.format(total_stats['LOG'],
+                                                          character.calc_dice_pool_size(total_stats['LOG'])))
+        self.st_total_wil_val.SetLabel('{} ({}d6)'.format(total_stats['WIL'],
+                                                          character.calc_dice_pool_size(total_stats['WIL'])))
+        self.st_total_cha_val.SetLabel('{} ({}d6)'.format(total_stats['CHA'],
+                                                          character.calc_dice_pool_size(total_stats['CHA'])))
+        self.st_total_luc_val.SetLabel('{} ({}d6)'.format(total_stats['LUC'],
+                                                          character.calc_dice_pool_size(total_stats['LUC'])))
+        self.st_total_rep_val.SetLabel('{} ({}d6)'.format(total_stats['REP'],
+                                                          character.calc_dice_pool_size(total_stats['REP'])))
+        self.st_total_mag_val.SetLabel('{} ({}d6)'.format(total_stats['MAG'],
+                                                          character.calc_dice_pool_size(total_stats['MAG'])))
+        self.st_total_chi_val.SetLabel('{} ({}d6)'.format(total_stats['CHI'],
+                                                          character.calc_dice_pool_size(total_stats['CHI'])))
+        self.st_total_psi_val.SetLabel('{} ({}d6)'.format(total_stats['PSI'],
+                                                          character.calc_dice_pool_size(total_stats['PSI'])))
 
         all_exploits_str = ''
         for exploit in self.user_character.get_all_exploits():
@@ -1255,7 +1267,7 @@ class WCA_Frame(wx.Frame):
         derived_stats = self.user_character.calc_derived_stats()
 
         self.st_overview_ds_health_val.SetLabel(derived_stats['Health'])
-        self.st_overview_ds_initiative_val.SetLabel(str(derived_stats['Initiative']))
+        self.st_overview_ds_initiative_val.SetLabel('{}d6'.format(derived_stats['Initiative']))
 
         self.st_overview_ds_speed_val.SetLabel(str(derived_stats['Speed']))
         self.st_overview_ds_climb_val.SetLabel(str(derived_stats['Climb']))
@@ -1418,6 +1430,8 @@ class WCA_Frame(wx.Frame):
                 mental_selection)
             self.user_character.defense_skills['Vital'] = set_defense_skills_dialog.c_sdsd_vital.GetString(
                 vital_selection)
+
+            self.update_overview_tab(None)
 
     ######################
     # Race tab functions #
