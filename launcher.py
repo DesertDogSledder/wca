@@ -1,6 +1,6 @@
 from lib import tui, update
 try:
-    import wca_gui_wx
+    import wca
 except ModuleNotFoundError:
     message = ('WX module not found. Do you have wxPython installed? Try typing\n'
                '    pip install -U wxPython\n'
@@ -29,7 +29,7 @@ def main():
         selection = tui.user_selection()
 
         if selection == '1':
-            wca_gui_wx.main()
+            wca.main()
             break
         elif selection == '2':
             update.update_wca()
