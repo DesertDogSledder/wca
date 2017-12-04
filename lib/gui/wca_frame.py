@@ -1088,6 +1088,7 @@ class WCA_Frame(wx.Frame):
         self.Centre(wx.BOTH)
 
         # Connect Events
+        self.Bind(wx.EVT_CLOSE, self.quit_wca)
         self.Bind(wx.EVT_MENU, self.new_character, id=self.mi_file_new.GetId())
         self.Bind(wx.EVT_MENU, self.open_file, id=self.mi_file_open.GetId())
         self.Bind(wx.EVT_MENU, self.save_as_file, id=self.mi_file_save_as.GetId())
@@ -1134,8 +1135,8 @@ class WCA_Frame(wx.Frame):
     def new_character(self, event):
         if self.character_not_saved:
             prompt_response = wx.MessageBox("There are unsaved changes.  Would you like to save before quitting?",
-                             "WOIN Character Assistant",
-                             wx.ICON_QUESTION | wx.YES_NO | wx.CANCEL, self)
+                                            "WOIN Character Assistant",
+                                            wx.ICON_QUESTION | wx.YES_NO | wx.CANCEL, self)
             if prompt_response == wx.YES:
                 self.save_as_file(None)
             elif prompt_response == wx.CANCEL:
@@ -1168,8 +1169,8 @@ class WCA_Frame(wx.Frame):
     def open_file(self, event):
         if self.character_not_saved:
             prompt_response = wx.MessageBox("There are unsaved changes.  Would you like to save before quitting?",
-                             "WOIN Character Assistant",
-                             wx.ICON_QUESTION | wx.YES_NO | wx.CANCEL, self)
+                                            "WOIN Character Assistant",
+                                            wx.ICON_QUESTION | wx.YES_NO | wx.CANCEL, self)
             if prompt_response == wx.YES:
                 self.save_as_file(None)
             elif prompt_response == wx.CANCEL:
@@ -1221,13 +1222,15 @@ class WCA_Frame(wx.Frame):
     def quit_wca(self, event):
         if self.character_not_saved:
             prompt_response = wx.MessageBox("There are unsaved changes.  Would you like to save before quitting?",
-                             "WOIN Character Assistant",
-                             wx.ICON_QUESTION | wx.YES_NO | wx.CANCEL, self)
+                                            "WOIN Character Assistant",
+                                            wx.ICON_QUESTION | wx.YES_NO | wx.CANCEL, self)
             if prompt_response == wx.YES:
                 self.save_as_file(None)
             elif prompt_response == wx.CANCEL:
+                if event.CanVeto():
+                    event.Veto()
                 return
-        self.Close()
+        self.Destroy()
 
     #########################
     # Tab refresh functions #
