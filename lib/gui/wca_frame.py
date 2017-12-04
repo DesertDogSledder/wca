@@ -22,7 +22,7 @@ from data.homeworlds import *
 class WCA_Frame(wx.Frame):
     def __init__(self, parent):
         wx.Frame.__init__(self, parent, id=wx.ID_ANY, title=u"WOIN Character Assistant", pos=wx.DefaultPosition,
-                          size=wx.Size(660, 760), style=wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
+                          size=wx.Size(660, 780), style=wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
 
         self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
 
@@ -171,6 +171,7 @@ class WCA_Frame(wx.Frame):
         bs_overview_ds_movement = wx.BoxSizer(wx.HORIZONTAL)
 
         fgs_overview_ds_movement_1 = wx.FlexGridSizer(0, 2, 0, 0)
+        fgs_overview_ds_movement_1.AddGrowableCol(1)
         fgs_overview_ds_movement_1.SetFlexibleDirection(wx.BOTH)
         fgs_overview_ds_movement_1.SetNonFlexibleGrowMode(wx.FLEX_GROWMODE_NONE)
 
@@ -205,7 +206,7 @@ class WCA_Frame(wx.Frame):
         fgs_overview_ds_movement_1.Add(self.st_overview_ds_swim_val, 0, wx.ALL, 5)
 
         self.st_overview_ds_vertical_jump = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY,
-                                                          u"Vertical Jump", wx.DefaultPosition, wx.DefaultSize, 0)
+                                                          u"Ver. Jump", wx.DefaultPosition, wx.DefaultSize, 0)
         self.st_overview_ds_vertical_jump.Wrap(-1)
         fgs_overview_ds_movement_1.Add(self.st_overview_ds_vertical_jump, 0, wx.ALL, 5)
 
@@ -261,7 +262,7 @@ class WCA_Frame(wx.Frame):
         fgs_overview_ds_movement_2.Add(self.st_overview_ds_high_g_val, 0, wx.ALL, 5)
 
         self.st_overview_ds_horizonal_jump = wx.StaticText(sbs_overview_ds_movement.GetStaticBox(), wx.ID_ANY,
-                                                           u"Horizontal Jump", wx.DefaultPosition, wx.DefaultSize, 0)
+                                                           u"Hor. Jump", wx.DefaultPosition, wx.DefaultSize, 0)
         self.st_overview_ds_horizonal_jump.Wrap(-1)
         fgs_overview_ds_movement_2.Add(self.st_overview_ds_horizonal_jump, 0, wx.ALL, 5)
 
@@ -277,7 +278,7 @@ class WCA_Frame(wx.Frame):
         fgs_overview_derived_stats.Add(sbs_overview_ds_movement, 1, wx.EXPAND, 5)
 
         sbs_overview_ds_defense = wx.StaticBoxSizer(
-            wx.StaticBox(sbs_overview_derived_stats.GetStaticBox(), wx.ID_ANY, u"Defense"), wx.HORIZONTAL)
+            wx.StaticBox(sbs_overview_derived_stats.GetStaticBox(), wx.ID_ANY, u"Defense"), wx.VERTICAL)
 
         fgs_overview_ds_defense_1 = wx.FlexGridSizer(0, 2, 0, 0)
         fgs_overview_ds_defense_1.SetFlexibleDirection(wx.BOTH)
@@ -1132,9 +1133,10 @@ class WCA_Frame(wx.Frame):
     ##################
     def new_character(self, event):
         if self.character_not_saved:
-            if wx.MessageBox("Current character has not been saved! Continue?", "Unsaved changes",
-                             wx.ICON_QUESTION | wx.YES_NO, self) == wx.NO:
-                return
+            if wx.MessageBox("There are unsaved changes.  Would you like to save before continuing?",
+                             "WOIN Character Assistant",
+                             wx.ICON_QUESTION | wx.YES_NO | wx.CANCEL, self) == wx.YES:
+                self.save_as_file(None)
 
         self.nb_main.Show()
         self.user_character = character.Character(race={'Race': copy.deepcopy(races_new.race_new_human),
@@ -1162,9 +1164,10 @@ class WCA_Frame(wx.Frame):
 
     def open_file(self, event):
         if self.character_not_saved:
-            if wx.MessageBox("Current character has not been saved! Continue?", "Unsaved changes",
-                             wx.ICON_QUESTION | wx.YES_NO, self) == wx.NO:
-                return
+            if wx.MessageBox("There are unsaved changes.  Would you like to save before continuing?",
+                             "WOIN Character Assistant",
+                             wx.ICON_QUESTION | wx.YES_NO | wx.CANCEL, self) == wx.YES:
+                self.save_as_file(None)
 
         # otherwise ask the user what new file to open
         with wx.FileDialog(self, "Open Character file", wildcard="WCA files (*.wca)|*.wca",
@@ -1210,10 +1213,10 @@ class WCA_Frame(wx.Frame):
                 wx.LogError("Cannot save current data in file '{}}'.".format(pathname))
 
     def quit_wca(self, event):
-        if self.character_not_saved:
-            if wx.MessageBox("Current character has not been saved! Are you sure you want to quit?", "Unsaved changes",
-                             wx.ICON_QUESTION | wx.YES_NO, self) == wx.NO:
-                return
+        if wx.MessageBox("There are unsaved changes.  Would you like to save before quitting?",
+                         "WOIN Character Assistant",
+                         wx.ICON_QUESTION | wx.YES_NO | wx.CANCEL, self) == wx.YES:
+            self.save_as_file(None)
         self.Close()
 
     #########################
