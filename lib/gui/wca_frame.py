@@ -1133,10 +1133,13 @@ class WCA_Frame(wx.Frame):
     ##################
     def new_character(self, event):
         if self.character_not_saved:
-            if wx.MessageBox("There are unsaved changes.  Would you like to save before continuing?",
+            prompt_response = wx.MessageBox("There are unsaved changes.  Would you like to save before quitting?",
                              "WOIN Character Assistant",
-                             wx.ICON_QUESTION | wx.YES_NO | wx.CANCEL, self) == wx.YES:
-                self.save_as_file(None)
+                             wx.ICON_QUESTION | wx.YES_NO | wx.CANCEL, self)
+        if prompt_response == wx.YES:
+            self.save_as_file(None)
+        elif prompt_response == wx.CANCEL:
+            return
 
         self.nb_main.Show()
         self.user_character = character.Character(race={'Race': copy.deepcopy(races_new.race_new_human),
@@ -1164,10 +1167,13 @@ class WCA_Frame(wx.Frame):
 
     def open_file(self, event):
         if self.character_not_saved:
-            if wx.MessageBox("There are unsaved changes.  Would you like to save before continuing?",
+            prompt_response = wx.MessageBox("There are unsaved changes.  Would you like to save before quitting?",
                              "WOIN Character Assistant",
-                             wx.ICON_QUESTION | wx.YES_NO | wx.CANCEL, self) == wx.YES:
-                self.save_as_file(None)
+                             wx.ICON_QUESTION | wx.YES_NO | wx.CANCEL, self)
+        if prompt_response == wx.YES:
+            self.save_as_file(None)
+        elif prompt_response == wx.CANCEL:
+            return
 
         # otherwise ask the user what new file to open
         with wx.FileDialog(self, "Open Character file", wildcard="WCA files (*.wca)|*.wca",
@@ -1213,10 +1219,14 @@ class WCA_Frame(wx.Frame):
                 wx.LogError("Cannot save current data in file '{}}'.".format(pathname))
 
     def quit_wca(self, event):
-        if wx.MessageBox("There are unsaved changes.  Would you like to save before quitting?",
-                         "WOIN Character Assistant",
-                         wx.ICON_QUESTION | wx.YES_NO | wx.CANCEL, self) == wx.YES:
+        if self.character_not_saved:
+            prompt_response = wx.MessageBox("There are unsaved changes.  Would you like to save before quitting?",
+                             "WOIN Character Assistant",
+                             wx.ICON_QUESTION | wx.YES_NO | wx.CANCEL, self)
+        if prompt_response == wx.YES:
             self.save_as_file(None)
+        elif prompt_response == wx.CANCEL:
+            return
         self.Close()
 
     #########################
