@@ -106,6 +106,23 @@ class Character(object):
 
         return stat_total
 
+    def calc_current_stat_total(self, stop_index):
+        stat_total = copy.deepcopy(self.stats)
+
+        for stat, value in self.race['Stats'].items():
+            stat_total[stat] += value
+
+        for stat, value in self.homeworld['Homeworld'].stats.items():
+            stat_total[stat] += value
+
+        career_index = 0
+        while career_index <= stop_index:
+            for stat, value in self.career_track[career_index]['Stats'].items():
+                stat_total[stat] += value
+            career_index += 1
+
+        return stat_total
+
     def calc_skill_total(self):
         skill_list = []
         skill_total = collections.OrderedDict()

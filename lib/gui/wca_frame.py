@@ -1670,8 +1670,7 @@ class WCA_Frame(wx.Frame):
 
     def set_career_exploit(self, event):
         career_track_index = self.lb_careers_list.GetSelection()
-        set_career_exploit = AddExploitDialog(self, self.user_character.career_track[career_track_index]['Career'],
-                                              u"Set Career Exploit")
+        set_career_exploit = AddExploitDialog(self, career_track_index, u"Set Career Exploit")
         list_source = self.user_character.career_track[career_track_index]['Exploit']['Source']
         if list_source != 'unset' and list_source is not None:
             if list_source is 'universal':
