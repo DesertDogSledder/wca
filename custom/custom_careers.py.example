@@ -23,16 +23,16 @@ custom_career_list = []
 #                          'Desc': '''You can gather local gossip and information simply by spending an hour in a basketweaving club, effectively giving you the local knowledge skill wherever you go as long as you are able to refresh your knowledge at a local basketweaving club weekly.'''}])
 # custom_career_list.append(basketweaver)
 #
-########################################
-# DO NOT EDIT ANYTHING ABOVE THIS LINE #
-########################################
+#########################################
+# INSERT CUSTOM CONTENT BELOW THIS LINE #
+#########################################
 
 
 
 
-########################################
-# DO NOT EDIT ANYTHING BELOW THIS LINE #
-########################################
-# custom_career_list.sort(key=lambda x: x.name)
+#########################################
+# INSERT CUSTOM CONTENT ABOVE THIS LINE #
+#########################################
+custom_career_list.sort(key=lambda x: x.name)
 for career in custom_career_list:
     career.available_skills.sort()

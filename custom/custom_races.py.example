@@ -19,17 +19,17 @@ custom_race_list = []
 #                'Desc': '''Slugpeople leave a trail of slime wherever they go. Every square you move through on your turn counts as difficult terrain for anyone but other slugpeople until the beginning of your next turn.'''}])
 # custom_race_list.append(slugpeople)
 #
-########################################
-# DO NOT EDIT ANYTHING ABOVE THIS LINE #
-########################################
+#########################################
+# INSERT CUSTOM CONTENT BELOW THIS LINE #
+#########################################
 
 
 
 
-########################################
-# DO NOT EDIT ANYTHING BELOW THIS LINE #
-########################################
-# custom_race_list.sort(key=lambda x: x.name)
+#########################################
+# INSERT CUSTOM CONTENT ABOVE THIS LINE #
+#########################################
+custom_race_list.sort(key=lambda x: x.name)
 for race in custom_race_list:
     race.available_skills.sort()
     race.exploits.sort(key=lambda x: x['Name'])

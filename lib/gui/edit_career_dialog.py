@@ -5,7 +5,7 @@ import wx.xrc
 import wx.lib.intctrl
 from data.careers import *
 try:
-    from data.custom import custom_careers
+    from custom import custom_careers
     custom_careers_loaded = True
 except ImportError:
     custom_careers_loaded = False

@@ -4,7 +4,7 @@ import wx
 import wx.xrc
 from data.homeworlds import *
 try:
-    from data.custom import custom_homeworlds
+    from custom import custom_homeworlds
     custom_homeworlds_loaded = True
 except ImportError:
     custom_homeworlds_loaded = False

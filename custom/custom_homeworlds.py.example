@@ -23,17 +23,17 @@ custom_homeworld_list = []
 #     available_skills=['farming', 'plowing'])
 # custom_homeworld_list.append(farmworld)
 #
-########################################
-# DO NOT EDIT ANYTHING ABOVE THIS LINE #
-########################################
+#########################################
+# INSERT CUSTOM CONTENT BELOW THIS LINE #
+#########################################
 
 
 
 
-########################################
-# DO NOT EDIT ANYTHING BELOW THIS LINE #
-########################################
-# custom_homeworld_list.sort(key=lambda x: x.name)
+#########################################
+# INSERT CUSTOM CONTENT ABOVE THIS LINE #
+#########################################
+custom_homeworld_list.sort(key=lambda x: x.name)
 custom_homeworld_list.insert(0, homeworlds_new.homeworld_none)
 for homeworld in custom_homeworld_list:
     homeworld.available_skills.sort()

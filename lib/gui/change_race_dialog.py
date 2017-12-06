@@ -5,7 +5,7 @@ import wx.xrc
 import wx.lib.intctrl
 from data.races import *
 try:
-    from data.custom import custom_races
+    from custom import custom_races
     custom_races_loaded = True
 except ImportError:
     custom_races_loaded = False
