@@ -3,6 +3,7 @@ import wx.xrc
 import pickle
 import copy
 import collections
+import re
 from lib import dice, character
 from lib.gui.add_exploit_dialog import AddExploitDialog
 from lib.gui.change_homeworld_dialog import ChangeHomeworldDialog
@@ -28,23 +29,43 @@ class WCA_Frame(wx.Frame):
 
         self.m_menubar = wx.MenuBar(0)
         self.m_file = wx.Menu()
-        self.mi_file_new = wx.MenuItem(self.m_file, wx.ID_ANY, u"New", wx.EmptyString, wx.ITEM_NORMAL)
+        self.mi_file_new = wx.MenuItem(self.m_file, wx.ID_ANY, u"New" + u"\t" + u"Ctrl+N", wx.EmptyString,
+                                       wx.ITEM_NORMAL)
         self.m_file.Append(self.mi_file_new)
 
-        self.mi_file_open = wx.MenuItem(self.m_file, wx.ID_ANY, u"Open...", wx.EmptyString, wx.ITEM_NORMAL)
+        self.mi_file_open = wx.MenuItem(self.m_file, wx.ID_ANY, u"Open..." + u"\t" + u"Ctrl+O", wx.EmptyString,
+                                        wx.ITEM_NORMAL)
         self.m_file.Append(self.mi_file_open)
 
-        self.mi_file_save = wx.MenuItem(self.m_file, wx.ID_ANY, u"Save", wx.EmptyString, wx.ITEM_NORMAL)
+        self.mi_file_save = wx.MenuItem(self.m_file, wx.ID_ANY, u"Save" + u"\t" + u"Ctrl+S", wx.EmptyString,
+                                        wx.ITEM_NORMAL)
         self.m_file.Append(self.mi_file_save)
+        self.mi_file_save.Enable(False)
 
         self.mi_file_save_as = wx.MenuItem(self.m_file, wx.ID_ANY, u"Save As...", wx.EmptyString, wx.ITEM_NORMAL)
         self.m_file.Append(self.mi_file_save_as)
         self.mi_file_save_as.Enable(False)
 
-        self.mi_file_quit = wx.MenuItem(self.m_file, wx.ID_ANY, u"Quit", wx.EmptyString, wx.ITEM_NORMAL)
+        self.m_file.AppendSeparator()
+
+        self.mi_file_export = wx.MenuItem(self.m_file, wx.ID_ANY, u"Export...", wx.EmptyString, wx.ITEM_NORMAL)
+        self.m_file.Append(self.mi_file_export)
+        self.mi_file_export.Enable(False)
+
+        self.m_file.AppendSeparator()
+
+        self.mi_file_quit = wx.MenuItem(self.m_file, wx.ID_ANY, u"Quit" + u"\t" + u"Alt+F4", wx.EmptyString,
+                                        wx.ITEM_NORMAL)
         self.m_file.Append(self.mi_file_quit)
 
         self.m_menubar.Append(self.m_file, u"File")
+
+        self.m_help = wx.Menu()
+        self.mi_help_about = wx.MenuItem(self.m_help, wx.ID_ANY, u"About..." + u"\t" + u"F1", wx.EmptyString,
+                                         wx.ITEM_NORMAL)
+        self.m_help.Append(self.mi_help_about)
+
+        self.m_menubar.Append(self.m_help, u"Help")
 
         self.SetMenuBar(self.m_menubar)
 
@@ -1091,8 +1112,11 @@ class WCA_Frame(wx.Frame):
         self.Bind(wx.EVT_CLOSE, self.quit_wca)
         self.Bind(wx.EVT_MENU, self.new_character, id=self.mi_file_new.GetId())
         self.Bind(wx.EVT_MENU, self.open_file, id=self.mi_file_open.GetId())
+        self.Bind(wx.EVT_MENU, self.save_file, id=self.mi_file_save.GetId())
         self.Bind(wx.EVT_MENU, self.save_as_file, id=self.mi_file_save_as.GetId())
+        self.Bind(wx.EVT_MENU, self.export_file, id=self.mi_file_export.GetId())
         self.Bind(wx.EVT_MENU, self.quit_wca, id=self.mi_file_quit.GetId())
+        self.Bind(wx.EVT_MENU, self.show_about, id=self.mi_help_about.GetId())
         self.tc_overview_name_val.Bind(wx.EVT_TEXT, self.set_character_name)
         self.b_overview_change_trait.Bind(wx.EVT_BUTTON, self.change_trait)
         self.b_overview_ds_set_def_skills.Bind(wx.EVT_BUTTON, self.set_defense_skills)
@@ -1116,6 +1140,9 @@ class WCA_Frame(wx.Frame):
 
         self.nb_main.Hide()
         self.character_not_saved = False
+        self.file_name = 'untitled'
+        self.path_name = None
+        self.version = 'v0.20.0'
 
     def __del__(self):
         pass
@@ -1124,6 +1151,10 @@ class WCA_Frame(wx.Frame):
     # Additional WCAFrame init stuff #
     ##################################
     # self.nb_main.Hide()
+    # self.character_not_saved = False
+    # self.file_name = 'untitled'
+    # self.path_name = None
+    # self.version = 'v0.20.0'
 
     ######################
     # WCAFrame Functions #
@@ -1154,6 +1185,7 @@ class WCA_Frame(wx.Frame):
                                                   age_descriptor='young')
         self.mi_file_save.Enable(True)
         self.mi_file_save_as.Enable(True)
+        self.mi_file_export.Enable(True)
 
         # Update
         self.update_overview_tab(None)
@@ -1164,7 +1196,10 @@ class WCA_Frame(wx.Frame):
         self.on_career_select(None)
         self.on_misc_exploit_select(None)
 
+        self.file_name = 'untitled'
+        self.file_path = None
         self.character_not_saved = False
+        self.SetTitle('{} - WOIN Character Assistant'.format(self.file_name))
 
     def open_file(self, event):
         if self.character_not_saved:
@@ -1184,14 +1219,18 @@ class WCA_Frame(wx.Frame):
                 return  # the user changed their mind
 
             # Proceed loading the file chosen by the user
-            pathname = file_dialog.GetPath()
+            path_name = file_dialog.GetPath()
             try:
-                with open(pathname, 'rb') as file:
+                with open(path_name, 'rb') as file:
+                    match = re.search('.*[/\\\\](.*?)\.wca', path_name)
+                    self.file_path = path_name
+                    self.file_name = match.group(1)
                     self.user_character = pickle.load(file)
             except IOError:
                 wx.LogError("Cannot open file '{}'.".format(file))
         self.mi_file_save.Enable(True)
         self.mi_file_save_as.Enable(True)
+        self.mi_file_export.Enable(True)
         self.nb_main.Show()
         # Update
         self.update_overview_tab(None)
@@ -1202,6 +1241,19 @@ class WCA_Frame(wx.Frame):
         self.on_career_select(None)
         self.on_misc_exploit_select(None)
         self.character_not_saved = False
+        self.SetTitle('{} - WOIN Character Assistant'.format(self.file_name))
+
+    def save_file(self, event):
+        if self.file_path is not None:
+            try:
+                with open(self.file_path, 'wb') as file:
+                    pickle.dump(self.user_character, file, pickle.HIGHEST_PROTOCOL)
+                self.character_not_saved = False
+                self.SetTitle('{} - WOIN Character Assistant'.format(self.file_name))
+            except IOError:
+                wx.LogError("Cannot save current data in file '{}}'.".format(self.file_path))
+        else:
+            self.save_as_file(None)
 
     def save_as_file(self, event):
         with wx.FileDialog(self, "Save WCA file", wildcard="WCA files (*.wca)|*.wca",
@@ -1211,13 +1263,32 @@ class WCA_Frame(wx.Frame):
                 return  # the user changed their mind
 
             # save the current contents in the file
-            pathname = file_dialog.GetPath()
+            path_name = file_dialog.GetPath()
             try:
-                with open(pathname, 'wb') as file:
+                with open(path_name, 'wb') as file:
                     pickle.dump(self.user_character, file, pickle.HIGHEST_PROTOCOL)
+                match = re.search('.*[/\\\\](.*?)\.wca', path_name)
+                self.file_path = path_name
+                self.file_name = match.group(1)
                 self.character_not_saved = False
+                self.SetTitle('{} - WOIN Character Assistant'.format(self.file_name))
             except IOError:
-                wx.LogError("Cannot save current data in file '{}}'.".format(pathname))
+                wx.LogError("Cannot save current data in file '{}}'.".format(path_name))
+
+    def export_file(self, event):
+        with wx.FileDialog(self, "Export character text file", wildcard="Text files (*.txt)|*.txt",
+                           style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as file_dialog:
+
+            if file_dialog.ShowModal() == wx.ID_CANCEL:
+                return  # the user changed their mind
+
+            # save the current contents in the file
+            path_name = file_dialog.GetPath()
+            try:
+                with open(path_name, 'w') as file:
+                    file.write(str(self.user_character))
+            except IOError:
+                wx.LogError("Cannot save current data in file '{}}'.".format(path_name))
 
     def quit_wca(self, event):
         if self.character_not_saved:
@@ -1231,6 +1302,14 @@ class WCA_Frame(wx.Frame):
                     event.Veto()
                 return
         self.Destroy()
+
+    def show_about(self, event):
+        about_str = 'WOIN Character Assistant {}\n'.format(self.version)
+        about_str += '    A character creation tool for the WOIN RPG\n'
+        about_str += '    http://www.woinrpg.com/\n'
+        about_str += '\nWritten by:\n'
+        about_str += 'DesertDogSledder'
+        wx.MessageBox(about_str, 'WOIN Character Assistant', wx.ICON_INFORMATION | wx.OK)
 
     #########################
     # Tab refresh functions #
@@ -1303,6 +1382,7 @@ class WCA_Frame(wx.Frame):
         self.st_overview_ds_defense_vital_val.SetLabel(str(derived_stats['Vital Defense']))
 
         self.character_not_saved = True
+        self.SetTitle('*{} - WOIN Character Assistant'.format(self.file_name))
 
     def update_race_tab(self, event):
         self.st_race_race_val.SetLabel(self.user_character.race['Race'].name)
@@ -1392,6 +1472,7 @@ class WCA_Frame(wx.Frame):
     def set_character_name(self, event):
         self.user_character.name = event.GetString()
         self.character_not_saved = True
+        self.SetTitle('*{} - WOIN Character Assistant'.format(self.file_name))
 
     def change_trait(self, event):
         set_trait_dialog = SetTraitDialog(self)
