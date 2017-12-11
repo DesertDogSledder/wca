@@ -318,7 +318,7 @@ career_woin_origin_service_droid = Career(
     available_exploits=[{'Name': '''Unsuspicious''',
                          'Desc': "Everybody trusts a service droid; it doesn't even occur to them that one might lie "
                                  "or attack. You gain a +1d6 bonus to all attempts to bluff or deceive or to access "
-                                 "anambush turn."}])
+                                 "an ambush turn."}])
 
 career_woin_origin_slave = Career(
     name='Slave',

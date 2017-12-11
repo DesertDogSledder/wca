@@ -338,7 +338,8 @@ class EditCareerDialog(wx.Dialog):
         career_list = self.get_career_list()
         selected_career = self.lb_ecd_career_list.GetSelection()
 
-        self.tc_ecd_career_desc.SetValue(career_list[selected_career].desc)
+        self.tc_ecd_career_desc.SetValue('Prerequisites: {}\n\n{}'.format(career_list[selected_career].prereq,
+                                                                          career_list[selected_career].desc))
 
         self.lb_ecd_exploit_list.Clear()
 

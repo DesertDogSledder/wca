@@ -1142,7 +1142,7 @@ class WCA_Frame(wx.Frame):
         self.character_not_saved = False
         self.file_name = 'untitled'
         self.path_name = None
-        self.version = 'v0.20.1'
+        self.version = 'v0.20.2'
 
     def __del__(self):
         pass

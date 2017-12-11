@@ -571,15 +571,16 @@ career_new_venetian_retreat = Career(
     desc='''The long-lived Venetians often retire to their own kind for a decade or more in order to contemplate their place in the universe, and train their minds.''',
     available_exploits=[{'Name': 'Fortified', 'Desc': "You gain a +5 bonus to MENTAL DEFENSE."}])
 
-career_new_list = [career_new_athlete, career_new_bartender, career_new_battlepsyche, career_new_biopsychic,
-                   career_new_bounty_hunter, career_new_burglar, career_new_college, career_new_con_artist,
-                   career_new_craftsman, career_new_detective, career_new_diplomat, career_new_engineer,
-                   career_new_gambler, career_new_gangster, career_new_intelligence_officer_spy,
-                   career_new_marine_cadet_assignment, career_new_marine_tour, career_new_medic, career_new_miner,
-                   career_new_navy_cadet_cruise, career_new_navy_tour, career_new_performer, career_new_pilot,
-                   career_new_police_officer, career_new_priest, career_new_prisoner, career_new_psi_cop,
-                   career_new_psychic, career_new_scientist, career_new_scout_special_forces, career_new_smuggler,
-                   career_new_sniper, career_new_socialite, career_new_space_jockey, career_new_spartan_battle_school,
+career_new_list = [career_new_academy, career_new_assassin, career_new_athlete, career_new_bartender,
+                   career_new_battlepsyche, career_new_biopsychic, career_new_bounty_hunter, career_new_burglar,
+                   career_new_college, career_new_con_artist, career_new_craftsman, career_new_detective,
+                   career_new_diplomat, career_new_drifter, career_new_engineer, career_new_gambler,
+                   career_new_gangster, career_new_intelligence_officer_spy, career_new_marine_cadet_assignment,
+                   career_new_marine_tour, career_new_medic, career_new_miner, career_new_navy_cadet_cruise,
+                   career_new_navy_tour, career_new_performer, career_new_pilot, career_new_police_officer,
+                   career_new_priest, career_new_prisoner, career_new_psi_cop, career_new_psychic,
+                   career_new_scientist, career_new_scout_special_forces, career_new_smuggler, career_new_sniper,
+                   career_new_socialite, career_new_space_jockey, career_new_spartan_battle_school,
                    career_new_starbase_assignment, career_new_star_knight, career_new_street_thug,
                    career_new_systems_upgrade, career_new_trader, career_new_venetian_retreat]
 
