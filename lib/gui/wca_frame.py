@@ -21,6 +21,7 @@ from data.homeworlds import *
 ###########################################################################
 
 class WCA_Frame(wx.Frame):
+
     def __init__(self, parent):
         wx.Frame.__init__(self, parent, id=wx.ID_ANY, title=u"WOIN Character Assistant", pos=wx.DefaultPosition,
                           size=wx.Size(660, 780), style=wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
@@ -130,6 +131,15 @@ class WCA_Frame(wx.Frame):
         self.b_overview_change_trait = wx.Button(sbs_overview_info.GetStaticBox(), wx.ID_ANY, u"Change Trait",
                                                  wx.DefaultPosition, wx.DefaultSize, 0)
         gbs_overview_info_1.Add(self.b_overview_change_trait, wx.GBPosition(3, 2), wx.GBSpan(1, 1), wx.ALL, 5)
+
+        self.st_overview_hook = wx.StaticText(sbs_overview_info.GetStaticBox(), wx.ID_ANY, u"Hook", wx.DefaultPosition,
+                                              wx.DefaultSize, 0)
+        self.st_overview_hook.Wrap(-1)
+        gbs_overview_info_1.Add(self.st_overview_hook, wx.GBPosition(4, 0), wx.GBSpan(1, 1), wx.ALL, 5)
+
+        self.tc_overview_hook_val = wx.TextCtrl(sbs_overview_info.GetStaticBox(), wx.ID_ANY, wx.EmptyString,
+                                            wx.DefaultPosition, wx.DefaultSize, 0)
+        gbs_overview_info_1.Add(self.tc_overview_hook_val, wx.GBPosition(4, 1), wx.GBSpan(1, 1), wx.ALL, 5)
 
         sbs_overview_info.Add(gbs_overview_info_1, 1, wx.EXPAND, 5)
 
@@ -1118,7 +1128,10 @@ class WCA_Frame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.quit_wca, id=self.mi_file_quit.GetId())
         self.Bind(wx.EVT_MENU, self.show_about, id=self.mi_help_about.GetId())
         self.tc_overview_name_val.Bind(wx.EVT_TEXT, self.set_character_name)
+        self.tc_overview_name_val.Bind(wx.EVT_TEXT_ENTER, self.set_character_name)
         self.b_overview_change_trait.Bind(wx.EVT_BUTTON, self.change_trait)
+        self.tc_overview_hook_val.Bind(wx.EVT_TEXT, self.set_character_hook)
+        self.tc_overview_hook_val.Bind(wx.EVT_TEXT_ENTER, self.set_character_hook)
         self.b_overview_ds_set_def_skills.Bind(wx.EVT_BUTTON, self.set_defense_skills)
         self.b_race_edit.Bind(wx.EVT_BUTTON, self.change_race)
         self.c_race_size.Bind(wx.EVT_CHOICE, self.set_race_size)
@@ -1142,7 +1155,7 @@ class WCA_Frame(wx.Frame):
         self.character_not_saved = False
         self.file_name = 'untitled'
         self.path_name = None
-        self.version = 'v0.20.2'
+        self.version = 'v0.20.3'
 
     def __del__(self):
         pass
@@ -1154,7 +1167,7 @@ class WCA_Frame(wx.Frame):
     # self.character_not_saved = False
     # self.file_name = 'untitled'
     # self.path_name = None
-    # self.version = 'v0.20.0'
+    # self.version = 'v0.0.0'
 
     ######################
     # WCAFrame Functions #
@@ -1321,6 +1334,7 @@ class WCA_Frame(wx.Frame):
         self.st_overview_homeworld_val.SetLabel(self.user_character.homeworld['Homeworld'].name)
         self.st_overview_race_val.SetLabel(self.user_character.race['Race'].name)
         self.st_overview_trait_val.SetLabel(self.user_character.trait['Name'])
+        self.tc_overview_hook_val.SetValue(self.user_character.hook)
 
         skill_total = self.user_character.calc_skill_total()
         skill_total_str = ''
@@ -1489,6 +1503,11 @@ class WCA_Frame(wx.Frame):
             selected_trait = set_trait_dialog.lb_std_exploit_list.GetSelection()
             self.user_character.trait = copy.deepcopy(set_trait_dialog.trait_list[selected_trait])
             self.update_overview_tab(None)
+
+    def set_character_hook(self, event):
+        self.user_character.hook = event.GetString()
+        self.character_not_saved = True
+        self.SetTitle('*{} - WOIN Character Assistant'.format(self.file_name))
 
     def set_defense_skills(self, event):
         set_defense_skills_dialog = SetDefenseSkillsDialog(self)

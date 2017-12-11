@@ -7,9 +7,10 @@ import wx.xrc
 ###########################################################################
 
 class SetDefenseSkillsDialog(wx.Dialog):
+
     def __init__(self, parent):
         wx.Dialog.__init__(self, parent, id=wx.ID_ANY, title=u"Set Defense Skills", pos=wx.DefaultPosition,
-                           size=wx.Size(699, 161), style=wx.DEFAULT_DIALOG_STYLE)
+                           size=wx.Size(699, 377), style=wx.DEFAULT_DIALOG_STYLE)
 
         skills_dict = parent.user_character.calc_skill_total()
         skills = ['']
@@ -19,6 +20,18 @@ class SetDefenseSkillsDialog(wx.Dialog):
         self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
 
         bs_sdsd_main = wx.BoxSizer(wx.VERTICAL)
+
+        self.st_ = wx.StaticText(self, wx.ID_ANY,
+                                 u"For MELEE and RANGED DEFENSE, you may use acrobatics, dodging, "
+                                 u"or foresight.\n\nFor MENTAL DEFENSE you may use concentration, meditation, "
+                                 u"bravery, discipline, religion, conviction, leadership, psychology, "
+                                 u"or rulership.\n\nFor VITAL DEFENSE you may use resistance.\n\nSkill with a melee "
+                                 u"weapon or unarmed combat applies to MELEE DEFENSE, but not ranged attacks.",
+                                 wx.DefaultPosition, wx.DefaultSize, 0)
+        self.st_.Wrap(-1)
+        self.st_.SetMinSize(wx.Size(-1, 175))
+
+        bs_sdsd_main.Add(self.st_, 0, wx.ALL, 5)
 
         bs_sdsd_def_skills = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -36,7 +49,7 @@ class SetDefenseSkillsDialog(wx.Dialog):
 
         c_sdsd_rangedChoices = skills
         self.c_sdsd_ranged = wx.Choice(sbs_sdsd_ranged.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
-                                      c_sdsd_rangedChoices, 0)
+                                       c_sdsd_rangedChoices, 0)
         self.c_sdsd_ranged.SetSelection(0)
         sbs_sdsd_ranged.Add(self.c_sdsd_ranged, 0, wx.ALL | wx.EXPAND, 5)
 
@@ -79,6 +92,7 @@ class SetDefenseSkillsDialog(wx.Dialog):
 
         self.Centre(wx.BOTH)
 
+        # Connect Events
         self.b_sdsd_ok.Bind(wx.EVT_BUTTON, self.on_ok)
         self.b_sdsd_cancel.Bind(wx.EVT_BUTTON, self.on_cancel)
 
@@ -89,7 +103,7 @@ class SetDefenseSkillsDialog(wx.Dialog):
         # Additional SetDefenseSkillsDialog init stuff #
         ################################################
         # skills_dict = parent.user_character.calc_skill_total()
-        # skills = []
+        # skills = ['']
         # for skill, value in skills_dict.items():
         #     skills.append(skill)
 

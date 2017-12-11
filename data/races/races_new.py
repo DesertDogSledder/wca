@@ -116,7 +116,7 @@ race_new_felan = Race(
     exploits=[{'Name': 'Fast',
                'Desc': "Felans are fast and nimble, adding 2 to their SPEED."},
               {'Name': 'Jumper',
-               'Decs': "Felans are adept at jumping, adding 5' to both horizontal and vertical jump distances."},
+               'Desc': "Felans are adept at jumping, adding 5' to both horizontal and vertical jump distances."},
               {'Name': 'Land on your feet',
                'Desc': "When falling, a Felan reduces the effective distance by 10'."},
               {'Name': 'Claws',
