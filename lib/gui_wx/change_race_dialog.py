@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import wx
-import wx.xrc
 import wx.lib.intctrl
+import wx.xrc
+
 from data.races import *
+
 try:
     from custom import custom_races
     custom_races_loaded = True

@@ -1,19 +1,21 @@
+import collections
+import copy
+import pickle
+import re
+
 import wx
 import wx.xrc
-import pickle
-import copy
-import collections
-import re
-from lib import dice, character
-from lib.gui.add_exploit_dialog import AddExploitDialog
-from lib.gui.change_homeworld_dialog import ChangeHomeworldDialog
-from lib.gui.change_race_dialog import ChangeRaceDialog
-from lib.gui.edit_career_dialog import EditCareerDialog
-from lib.gui.edit_skills_dialog import EditSkillsDialog
-from lib.gui.set_trait_dialog import SetTraitDialog
-from lib.gui.set_defense_skills_dialog import SetDefenseSkillsDialog
-from data.races import *
+
 from data.homeworlds import *
+from data.races import *
+from lib import dice, character
+from lib.gui_wx.add_exploit_dialog import AddExploitDialog
+from lib.gui_wx.change_homeworld_dialog import ChangeHomeworldDialog
+from lib.gui_wx.change_race_dialog import ChangeRaceDialog
+from lib.gui_wx.edit_career_dialog import EditCareerDialog
+from lib.gui_wx.edit_skills_dialog import EditSkillsDialog
+from lib.gui_wx.set_defense_skills_dialog import SetDefenseSkillsDialog
+from lib.gui_wx.set_trait_dialog import SetTraitDialog
 
 
 ###########################################################################

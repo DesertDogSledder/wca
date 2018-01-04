@@ -1,0 +1,29 @@
+custom_weapons_list = []
+
+#
+# TEMPLATE
+# To add your own weapons, follow the example below:
+#
+# basket_gun = {'Name': "Basket Gun",
+#               'Damage': "1d6+1",
+#               'Range': "2",
+#               'Type': ['piercing'],
+#               'Cost': 150,
+#               'Size': "medium",
+#               'Weight': 5,
+#               'Tech Level': 9,
+#               'Genre': "C",
+#               'Special': "Causes Splinters"}
+# custom_weapons_list.append(basket_gun)
+#
+#########################################
+# INSERT CUSTOM CONTENT BELOW THIS LINE #
+#########################################
+
+
+
+
+#########################################
+# INSERT CUSTOM CONTENT ABOVE THIS LINE #
+#########################################
+custom_weapons_list.sort(key=lambda x: x['Name'])

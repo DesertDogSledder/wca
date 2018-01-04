@@ -1,7 +1,6 @@
-from lib.gui.wca_frame import WCA_Frame
 import wx
-import logging
-import sys
+
+from lib.gui_wx.wca_frame import WCA_Frame
 
 
 # def handle_exception(exc_type, exc_value, exc_traceback):

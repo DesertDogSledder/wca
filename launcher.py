@@ -1,11 +1,11 @@
 from lib import tui, update
 try:
-    import wca
+    import wca_qt
 except ModuleNotFoundError:
-    message = ('WX module not found. Do you have wxPython installed? Try typing\n'
-               '    pip install -U wxPython\n'
-               'or visit https://wxpython.org/pages/downloads/ for more information on how to install '
-               'wxPython')
+    message = ('PyQt module not found. Do you have PyQt5 installed? Try typing\n'
+               '    pip install PyQt5\n'
+               'or visit https://www.riverbankcomputing.com/software/pyqt/download5 '
+               'for more information on how to install PyQt5')
     print(message)
     tui.wait()
     exit(1)
@@ -29,7 +29,7 @@ def main():
         selection = tui.user_selection()
 
         if selection == '1':
-            wca.main()
+            wca_qt.main()
             break
         elif selection == '2':
             update.update_wca()

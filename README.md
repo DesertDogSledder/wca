@@ -9,7 +9,7 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 * [Python 3](https://www.python.org/)
-* [wxPython 4.0](https://wxpython.org/pages/downloads/)
+* [PyQt 5](https://riverbankcomputing.com/software/pyqt/intro)
 * [git](https://git-scm.com/downloads) (for update functionality)
 
 
@@ -22,8 +22,8 @@ Run `launcher.py` to launch, update, or repair the application.
 ## Built With
 
 * [Python 3.6.3](https://www.python.org/)
-* [wxPython 4.0](https://wxpython.org/)
-* [wxFormBuilder](https://github.com/wxFormBuilder/wxFormBuilder)
+* [PyQt 5](https://riverbankcomputing.com/software/pyqt/intro)
+* [QtDesigner](https://riverbankcomputing.com/software/pyqt/intro)
 
 ## Authors
 

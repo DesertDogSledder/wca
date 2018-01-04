@@ -229,7 +229,7 @@ career_old_cleric = Career(
                                  "of good, your touch can now heal 2d6 HEALTH. A creature can only be affected once "
                                  "by your healing touch per day. Alternatively, if you chose the secret of evil, "
                                  "your touch now also pushes your target one stage along the Nausea status track."},
-                        {'Name': 'Portfolio.',
+                        {'Name': 'Portfolio',
                          'Desc': "Choose either the Good or the Evil virtue, plus one Elemental or Creature secret. "
                                  "If you choose the secret of good, your touch can heal 1d6 HEALTH as a single action "
                                  "(although any given creature can only benefit from this once per day). If you "

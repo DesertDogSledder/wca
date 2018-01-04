@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import wx
-import wx.xrc
 import wx.lib.intctrl
+import wx.xrc
+
 from data.careers import *
+
 try:
     from custom import custom_careers
     custom_careers_loaded = True

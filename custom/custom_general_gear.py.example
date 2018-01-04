@@ -1,0 +1,24 @@
+custom_general_gear_list = []
+
+#
+# TEMPLATE
+# To add your own general gear, follow the example below:
+#
+# woven_basket = {'Name': '''Woven Basket''',
+#                 'Cost': 2,
+#                 'Weight': '''1''',
+#                 'Tech Level': 0,
+#                 'Genre': '''A'''}
+# custom_general_gear_list.append(woven_basket)
+#
+#########################################
+# INSERT CUSTOM CONTENT BELOW THIS LINE #
+#########################################
+
+
+
+
+#########################################
+# INSERT CUSTOM CONTENT ABOVE THIS LINE #
+#########################################
+custom_general_gear_list.sort(key=lambda x: x['Name'])

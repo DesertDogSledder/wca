@@ -50,7 +50,7 @@ career_woin_origin_everyman = Career(
          "more.",
     available_exploits=[{'Name': '''Ordinary''',
                          'Desc': "Your very nondescript nature makes you easily able to blend in unnoticed, "
-                                 "giving you a +1d6 bonus to attempts to bluff, disguise, or otherwiseremain visible "
+                                 "giving you a +1d6 bonus to attempts to bluff, disguise, or otherwise remain visible "
                                  "but unremarked upon."}])
 
 career_woin_origin_experiment = Career(

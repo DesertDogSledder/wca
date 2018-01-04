@@ -2,7 +2,9 @@
 
 import wx
 import wx.xrc
+
 from data.exploits import *
+
 
 ###########################################################################
 ## Class SetTraitDialog

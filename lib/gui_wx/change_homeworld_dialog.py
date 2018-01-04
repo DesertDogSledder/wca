@@ -2,7 +2,9 @@
 
 import wx
 import wx.xrc
+
 from data.homeworlds import *
+
 try:
     from custom import custom_homeworlds
     custom_homeworlds_loaded = True

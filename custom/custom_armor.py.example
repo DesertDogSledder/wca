@@ -1,0 +1,39 @@
+custom_armor_list = []
+
+#
+# TEMPLATE
+# To add your own armor, follow the example below:
+#
+# woven_basket_armor = {'Name': "Woven Basket Armor",
+#                       'Soak': 3,
+#                       'Defense': 0,
+#                       'Cost': 200,
+#                       'Type': "Light",
+#                       'Weight': 2,
+#                       'Vulnerable': "Fire",
+#                       'Speed': 0,
+#                       'Special': "Looks Great"}
+# custom_armor_list.append(woven_basket_armor)
+#
+# woven_basket_shield = {'Name': "Woven Basket Shield",
+#                       'Soak': 0,
+#                       'Defense': 2,
+#                       'Cost': 100,
+#                       'Type': "Shield",
+#                       'Weight': 1,
+#                       'Vulnerable': "Fire",
+#                       'Speed': 0,
+#                       'Special': "Looks Great"}
+# custom_armor_list.append(woven_basket_shield)
+#
+#########################################
+# INSERT CUSTOM CONTENT BELOW THIS LINE #
+#########################################
+
+
+
+
+#########################################
+# INSERT CUSTOM CONTENT ABOVE THIS LINE #
+#########################################
+custom_armor_list.sort(key=lambda x: x['Name'])

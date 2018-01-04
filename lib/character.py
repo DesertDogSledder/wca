@@ -1,8 +1,8 @@
 import collections
 import copy
-import textwrap
-import shutil
 import math
+import shutil
+import textwrap
 
 
 def calc_dice_pool_size(raw_score):
@@ -49,7 +49,7 @@ class Character(object):
     def __init__(self, name='unnamed', strength=3, agility=3, endurance=3, willpower=3, intuition=3, logic=3,
                  charisma=3, luck=3, reputation=0, magic=0, chi=0, psionics=0, race=None,
                  homeworld=None, hook='unset', career_track=None, notes='', trait=None, misc_exploits=None,
-                 age_descriptor='unset', defense_skills=None):
+                 age_descriptor='unset', defense_skills=None, equipment=None):
         self.name = name
         self.stats = collections.OrderedDict(STR=strength,
                                              AGI=agility,
@@ -91,6 +91,13 @@ class Character(object):
         else:
             self.defense_skills = {'Melee': '', 'Ranged': '', 'Mental': '', 'Vital': ''}
 
+        if equipment is not None:
+            self.equipment = copy.deepcopy(equipment)
+        else:
+            self.equipment = {'General': [],
+                              'Weapons': [],
+                              'Armor': []}
+
     def calc_stat_total(self):
         stat_total = copy.deepcopy(self.stats)
 
@@ -124,24 +131,27 @@ class Character(object):
         return stat_total
 
     def calc_skill_total(self):
-        skill_list = []
         skill_total = collections.OrderedDict()
 
         for skill in self.race['Skills']:
-            skill_list.append(skill)
+            if skill['Name'] in skill_total:
+                skill_total[skill['Name']] += skill['Rank']
+            else:
+                skill_total[skill['Name']] = skill['Rank']
 
         for skill in self.homeworld['Skills']:
-            skill_list.append(skill)
+            if skill['Name'] in skill_total:
+                skill_total[skill['Name']] += skill['Rank']
+            else:
+                skill_total[skill['Name']] = skill['Rank']
 
         for career in self.career_track:
             for skill in career['Skills']:
-                skill_list.append(skill)
+                if skill['Name'] in skill_total:
+                    skill_total[skill['Name']] += skill['Rank']
+                else:
+                    skill_total[skill['Name']] = skill['Rank']
 
-        for skill in skill_list:
-            if skill in skill_total:
-                skill_total[skill] += 1
-            else:
-                skill_total[skill] = 1
         skill_total = collections.OrderedDict(sorted(skill_total.items(), key=lambda item: item))
         return skill_total
 
