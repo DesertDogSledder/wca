@@ -89,7 +89,7 @@ class WCA(QtWidgets.QMainWindow, Ui_MainWindow):
         self.file_name = 'untitled'
         self.character_saved = True
         self.size_choices = ['tiny', 'small', 'medium', 'large', 'enormous', 'gigantic', 'colossal', 'titanic']
-        self.version = 'v0.21.0'
+        self.version = 'v0.21.1'
 
         self.tw_eq_gn_val.setColumnWidth(0, 250)
         self.tw_eq_gn_val.setColumnWidth(2, 80)

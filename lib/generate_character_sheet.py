@@ -1,5 +1,3 @@
-import pickle
-
 from lib.character import calc_dice_pool_size
 from lib.character import calc_max_dice_pool_size
 
@@ -8,11 +6,6 @@ def generate_character_sheet(user_character):
     css = \
         '''    * {
                 box-sizing: border-box;
-            }
-            .column {
-                float: left;
-                width: 25%;
-                padding: 0px 10px 0px 10px;
             }
             
             .left {
@@ -26,6 +19,23 @@ def generate_character_sheet(user_character):
                 padding: 0px 10px 0px 10px;
             }
             
+            .three-col-1 {
+                float: left;
+                width: 20em;
+                padding: 0px 10px 0px 10px;            
+            }
+            
+            .three-col-2 {
+                float: left;
+                width: 20em;
+                padding: 0px 10px 0px 10px;               
+            }
+            
+            .three-col-3 {
+                float: left;
+                padding: 0px 10px 0px 10px;               
+            }
+            
             /* Clear floats after the columns */
             .row:after {
                 content: "";
@@ -34,12 +44,15 @@ def generate_character_sheet(user_character):
             }'''
 
     name_html = '''<b>{}</b>'''.format(user_character.name)
+    if len(user_character.career_track) > 0:
+        last_career = user_character.career_track[-1]['Career'].name.lower()
+    else:
+        last_career = '<no careers set!>'
     descriptor_html = '''a[n] {} {} {} {} who {} ({}d6)'''.format(
         user_character.age_descriptor,
         user_character.trait['Name'].lower(),
         user_character.race['Race'].name,
-        user_character.career_track[len(user_character.career_track) - 1]
-        ['Career'].name.lower(),
+        last_career,
         user_character.hook,
         calc_max_dice_pool_size(len(user_character.career_track)))
 
@@ -219,6 +232,100 @@ def generate_character_sheet(user_character):
 
     careers_html += '''</table>'''
 
+    general_gear_html = '''<b>General Gear</b>
+                <table border="1px">
+                    <tr>
+                        <th>Item</th>
+                        <th>Weight</th>
+                        <th>Quantity</th>
+                        <th>Cost</th>
+                    </tr>
+'''
+
+    for item in user_character.equipment['General']:
+        general_gear_html += \
+                '''                <tr>
+                        <td>{}</td>
+                        <td>{}</td>
+                        <td>{}</td>
+                        <td>{}</td>
+                    </tr>'''.format(item['Name'], item['Weight'], item['Quantity'], item['Cost'])
+
+    general_gear_html += '''</table>'''
+
+    weapons_html = '''<b>Weapons</b>
+                <table border="1px">
+                    <tr>
+                        <th>Item</th>
+                        <th>Quality</th>
+                        <th>Damage</th>
+                        <th>Type</th>
+                        <th>Range</th>
+                        <th>Weight</th>
+                        <th>Cost</th>
+                        <th>Quantity</th>
+                        <th>Special</th>
+                    </tr>
+'''
+
+    for weapon in user_character.equipment['Weapons']:
+        weapons_html += \
+            '''                <tr>
+                <td>{}</td>
+                <td>{}</td>
+                <td>{}</td>
+                <td>{}</td>
+                <td>{}</td>
+                <td>{}</td>
+                <td>{}</td>
+                <td>{}</td>
+                <td>{}</td>
+            </tr>'''.format(weapon['Name'], weapon['Quality'], weapon['Damage'], weapon['Type'], weapon['Range'],
+                            weapon['Weight'], weapon['Cost'], weapon['Quantity'], weapon['Special'])
+        for ammo in weapon['Ammunition']:
+            weapons_html += \
+            '''<tr>
+            <td colspan=7>Ammunition - {}</td>
+            <td>{}</td>
+            </tr>
+            '''.format(ammo['Name'], ammo['Quantity'])
+
+    weapons_html += '''</table>'''
+
+    armor_html = '''<b>Armor</b>
+                <table border="1px">
+                    <tr>
+                        <th>Item</th>
+                        <th>Type</th>
+                        <th>Quality</th>
+                        <th>Soak</th>
+                        <th>Defense</th>
+                        <th>Speed</th>
+                        <th>Weight</th>
+                        <th>Cost</th>
+                        <th>Quantity</th>
+                        <th>Special</th>
+                    </tr>
+'''
+
+    for armor in user_character.equipment['Armor']:
+        armor_html += \
+            '''                <tr>
+                <td>{}</td>
+                <td>{}</td>
+                <td>{}</td>
+                <td>{}</td>
+                <td>{}</td>
+                <td>{}</td>
+                <td>{}</td>
+                <td>{}</td>
+                <td>{}</td>
+                <td>{}</td>
+            </tr>'''.format(armor['Name'], armor['Type'], armor['Quality'], armor['Soak'], armor['Defense'],
+                            armor['Speed'], armor['Weight'], armor['Cost'], armor['Quantity'], armor['Special'])
+
+    armor_html += '''</table>'''
+
     html_str = \
             '''<html>
     <head>
@@ -259,10 +366,17 @@ def generate_character_sheet(user_character):
                 {careers}
             </div>
         </div><br /><br />
+        <div style="padding: 0px 10px 0px 10px;">
+            {general_gear}<br />
+            {weapons}<br />
+            {armor}<br />
+        </div>
+        <br /><br />
     </body>
 </html>'''.format(css=css, name=name_html, descriptor=descriptor_html, stats=stats_html,
                   health=health_html, defenses=defenses_html, movement=movement_html,
-                  skills=skills_html, exploits=exploits_html, careers=careers_html)
+                  skills=skills_html, exploits=exploits_html, careers=careers_html,
+                  general_gear=general_gear_html, weapons=weapons_html, armor=armor_html)
     # Character name
     # a[n] ____ who ____
     # Stats
@@ -281,20 +395,20 @@ def generate_character_sheet(user_character):
     return html_str
 
 
-if __name__ == '__main__':
-    path_name = '''C:\\Users\\amshe\\Documents\\BobbertQT.wca'''
-    output_path = '''C:\\Users\\amshe\\Documents\\BobbertQT.html'''
-    try:
-        with open(path_name, 'rb') as file:
-            my_char = pickle.load(file)
-    except IOError:
-        print("Cannot open file '{}'.".format(file))
-
-    html_str = generate_character_sheet(my_char)
-
-    try:
-        with open(output_path, 'w') as file:
-            file.write(str(html_str))
-            print('File written to {}'.format(output_path))
-    except IOError:
-        print("Cannot open file '{}'.".format(file))
+# if __name__ == '__main__':
+#     path_name = '''C:\\QtUI\\Savany_Tesler.wca'''
+#     output_path = '''C:\\QtUI\\Savany_Tesler.html'''
+#     try:
+#         with open(path_name, 'rb') as file:
+#             my_char = pickle.load(file)
+#     except IOError:
+#         print("Cannot open file '{}'.".format(file))
+#
+#     html_str = generate_character_sheet(my_char)
+#
+#     try:
+#         with open(output_path, 'w') as file:
+#             file.write(str(html_str))
+#             print('File written to {}'.format(output_path))
+#     except IOError:
+#         print("Cannot open file '{}'.".format(file))
