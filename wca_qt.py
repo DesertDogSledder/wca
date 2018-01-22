@@ -89,7 +89,7 @@ class WCA(QtWidgets.QMainWindow, Ui_MainWindow):
         self.file_name = 'untitled'
         self.character_saved = True
         self.size_choices = ['tiny', 'small', 'medium', 'large', 'enormous', 'gigantic', 'colossal', 'titanic']
-        self.version = 'v0.21.1'
+        self.version = 'v0.21.2'
 
         self.tw_eq_gn_val.setColumnWidth(0, 250)
         self.tw_eq_gn_val.setColumnWidth(2, 80)
@@ -1019,7 +1019,7 @@ class WCA(QtWidgets.QMainWindow, Ui_MainWindow):
         if general_gear_dialog.exec_():
             selected_item = general_gear_dialog.tw_ggd_gear.currentItem()
             item_dict = {'Name': selected_item.text(0),
-                         'Cost': int(selected_item.text(1)),
+                         'Cost': float(selected_item.text(1)),
                          'Weight': selected_item.text(2),
                          'Availability': selected_item.text(3),
                          'Quantity': int(general_gear_dialog.sb_ggd_quantity_val.text()),
@@ -1045,10 +1045,10 @@ class WCA(QtWidgets.QMainWindow, Ui_MainWindow):
                          'Damage': selected_item.text(1),
                          'Type': selected_item.text(2),
                          'Range': selected_item.text(3),
-                         'Base Cost': int(selected_item.text(4)),
-                         'Cost': int(weapon_dialog.item_cost),
+                         'Base Cost': float(selected_item.text(4)),
+                         'Cost': float(weapon_dialog.item_cost),
                          'Size': selected_item.text(5),
-                         'Weight': int(selected_item.text(6)),
+                         'Weight': float(selected_item.text(6)),
                          'Availability': selected_item.text(7),
                          'Special': selected_item.text(8),
                          'Quantity': int(weapon_dialog.sb_wd_quantity_val.text()),
@@ -1128,10 +1128,10 @@ class WCA(QtWidgets.QMainWindow, Ui_MainWindow):
             item_dict = {'Name': selected_item.text(0),
                          'Soak': int(selected_item.text(1)),
                          'Defense': int(selected_item.text(2)),
-                         'Base Cost': int(selected_item.text(3)),
-                         'Cost': int(armor_dialog.item_cost),
+                         'Base Cost': float(selected_item.text(3)),
+                         'Cost': float(armor_dialog.item_cost),
                          'Type': selected_item.text(4),
-                         'Weight': int(selected_item.text(5)),
+                         'Weight': float(selected_item.text(5)),
                          'Vulnerable': selected_item.text(6),
                          'Speed': int(selected_item.text(7)),
                          'Special': selected_item.text(8),
